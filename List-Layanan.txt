@@ -1,6 +1,6 @@
 Layanan:
-| Nama        | Harga per Kg |
-| Cuci Kering | 5000         |
-| Cuci Setrika| 7000         |
-| Setrika Saja| 4000         |
-| Express     | 25000        |
+| Nama         | Harga per Kg |
+| Cuci Kering  | 5000         |
+| Cuci Setrika | 7000         |
+| Setrika Saja | 4000         |
+| Express      | 25000        |
