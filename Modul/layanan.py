@@ -4,7 +4,7 @@ import os
 
 # PENGATURAN DAN DATA AWAL
 
-FOLDER_PROGRAM = os.path.dirname(os.path.abspath(__file__))
+FOLDER_PROGRAM = os.path.dirname(__file__)
 FILE_LAYANAN = os.path.join(FOLDER_PROGRAM, "layanan.json")
 LEBAR_GARIS = 52
 
@@ -27,7 +27,6 @@ JAWABAN_TIDAK = {"t", "tidak", "n"}
 # VALIDASI INPUT
 
 def input_teks(pesan, boleh_kosong=False):
-
     while True:
         teks = input(pesan).strip()
         if teks != "" or boleh_kosong:
@@ -36,7 +35,6 @@ def input_teks(pesan, boleh_kosong=False):
 
 
 def input_angka(pesan, minimal=0, maksimal=None, boleh_kosong=False):
-
     while True:
         teks = input(pesan).strip()
 
@@ -57,26 +55,7 @@ def input_angka(pesan, minimal=0, maksimal=None, boleh_kosong=False):
             return angka
 
 
-def input_desimal(pesan, minimal=0.1, maksimal=1000):
-
-    while True:
-        teks = input(pesan).strip().replace(",", ".")
-
-        try:
-            angka = float(teks)
-        except ValueError:
-            print("Input harus berupa angka (contoh: 3 atau 2.5), coba lagi.")
-            continue
-
-        if not (minimal <= angka <= maksimal):
-            print(f"Berat harus antara {minimal:g} sampai {maksimal:g} kg.")
-            continue
-
-        return angka
-
-
 def konfirmasi(pesan):
-
     while True:
         jawaban = input(pesan + " (y/t): ").strip().lower()
         if jawaban in JAWABAN_YA:
@@ -86,11 +65,9 @@ def konfirmasi(pesan):
         print("Jawab dengan y (ya) atau t (tidak).")
 
 
-# =====================================================================
 # PENYIMPANAN DATA (FILE JSON)
-# =====================================================================
-def buat_data_awal():
 
+def buat_data_awal():
     data = []
     for nama, harga, estimasi in LAYANAN_AWAL:
         layanan = {"nama": nama, "harga": harga, "estimasi_jam": estimasi}
@@ -99,7 +76,6 @@ def buat_data_awal():
 
 
 def simpan_data(data):
-
     try:
         with open(FILE_LAYANAN, "w") as file:
             json.dump(data, file, indent=4)
@@ -110,7 +86,6 @@ def simpan_data(data):
 
 
 def data_valid(data):
-
     if not isinstance(data, list):
         return False
     for layanan in data:
@@ -147,9 +122,8 @@ def muat_data():
         return buat_data_awal()
 
 
-# =====================================================================
 # TAMPILAN
-# =====================================================================
+
 def cetak_garis():
     print("=" * LEBAR_GARIS)
 
@@ -192,44 +166,25 @@ def tampilkan_daftar(data):
     print("-" * 48)
 
 
-def tampilkan_detail(layanan):
-    """Tampilkan detail satu layanan beserta contoh total harga."""
-    print()
-    cetak_garis()
-    print("DETAIL LAYANAN")
-    cetak_garis()
-    print(f"Nama layanan : {layanan['nama']}")
-    print(f"Harga per kg : {format_rupiah(layanan['harga'])}")
-    print(f"Estimasi     : {layanan['estimasi_jam']} jam")
-    print("Contoh harga :")
-    for berat in (1, 3, 5):  # tuple berat contoh (kg)
-        total = berat * layanan["harga"]
-        print(f"   {berat} kg = {format_rupiah(total)}")
-    cetak_garis()
-
-
-# FITUR: TAMBAH, UBAH, HAPUS, BANYAK KG PESANAN
+# FITUR: TAMBAH, UBAH, HAPUS LAYANAN
 
 def tambah_layanan(data):
     print("\n--- TAMBAH LAYANAN ---")
-    nama = input_teks("Nama layanan (setrika saja, cuci setrika, cuci saja, express)         : ")
+    nama = input_teks("Nama layanan (contoh: Cuci Saja)  : ")
 
     # set berisi nama yang sudah dipakai (huruf kecil semua)
     nama_terpakai = {item["nama"].lower() for item in data}
     if nama.lower() in nama_terpakai:
         print("Layanan dengan nama itu sudah ada.")
-        return None
+        return
 
     harga = input_angka("Harga per kg (Rp)      : ", minimal=1)
     estimasi = input_angka("Estimasi selesai (jam) : ", minimal=1)
 
-    layanan_baru = {"nama": nama, "harga": harga, "estimasi_jam": estimasi}
-    data.append(layanan_baru)
+    data.append({"nama": nama, "harga": harga, "estimasi_jam": estimasi})
 
     if simpan_data(data):
         print(f"Layanan '{nama}' berhasil ditambahkan.")
-        return len(data) - 1
-    return None
 
 
 def ubah_layanan(data):
@@ -299,124 +254,17 @@ def hapus_layanan(data):
         print("Penghapusan dibatalkan.")
 
 
-def input_berat_pesanan(data, indeks=None):
-    """Pilih layanan dan isi berat pesanan."""
-    print("\n--- BUAT PESANAN ---")
-    if len(data) == 0:
-        print("Belum ada layanan. Tambahkan layanan terlebih dahulu.")
-        return
-
-    # Jika belum memilih layanan dari menu sebelumnya, tampilkan daftar.
-    if indeks is None:
-        tampilkan_daftar(data)
-        indeks = pilih_nomor_layanan(data, "Pilih nomor layanan")
-        if indeks is None:
-            print("Dibatalkan.")
-            return
-
-    layanan = data[indeks]
-    print(f"Layanan        : {layanan['nama']}")
-    print(f"Harga per kg   : {format_rupiah(layanan['harga'])}")
-    berat = input_desimal("Berapa kg pesanannya? ")
-
-    total = berat * layanan["harga"]
-
-    print()
-    cetak_garis()
-    print("RINGKASAN PESANAN")
-    cetak_garis()
-    print(f"Layanan        : {layanan['nama']}")
-    print(f"Banyak pesanan : {berat:g} kg")
-    print(f"Total harga    : {format_rupiah(total)}")
-    print(f"Estimasi selesai: {layanan['estimasi_jam']} jam")
-    cetak_garis()
-
-
 # MENU
 
-def tanya_kembali_atau_keluar():
-    """Mengembalikan True kalau pengguna memilih keluar."""
-    print("\n1. Kembali ke menu")
-    print("2. Keluar")
-    pilihan = input_angka("Pilih (1/2): ", 1, 2)
-    return pilihan == 2
-
-
-def lihat_menu_layanan(data):
-    """Menampilkan detail layanan lalu memberi pilihan tindakan berikutnya."""
-    tampilkan_daftar(data)
-    if len(data) == 0:
-        return "kembali"
-
-    indeks = pilih_nomor_layanan(data, "Pilih nomor layanan")
-    if indeks is None:
-        return "kembali"
-
-    tampilkan_detail(data[indeks])
-
-    print("\nApa yang ingin dilakukan selanjutnya?")
-    print("1. Buat pesanan dengan layanan ini")
-    print("2. Tambah layanan baru")
-    print("3. Kembali ke menu layanan")
-    print("0. Kembali ke menu utama")
-    pilihan = input_angka("Pilih menu: ", 0, 3)
-
-    if pilihan == 1:
-        input_berat_pesanan(data, indeks)
-        return "kembali"
-    elif pilihan == 2:
-        tambah_layanan(data)
-        return "kembali"
-    elif pilihan == 3:
-        return "kembali"
-    else:
-        return "utama"
-
-
-def tampilkan_submenu():
+def tampilkan_menu():
     print()
     cetak_garis()
     print("MANAJEMEN LAYANAN LAUNDRY")
     cetak_garis()
-    print("1. Lihat Menu Layanan")
+    print("1. Lihat Daftar Layanan")
     print("2. Tambah Layanan")
     print("3. Ubah Layanan")
     print("4. Hapus Layanan")
-    print("5. Buat Pesanan")
-    print("0. Kembali ke Menu Utama")
-    cetak_garis()
-
-
-def menu_layanan(data):
-    """Submenu layanan. Mengembalikan True kalau pengguna ingin keluar program."""
-    while True:
-        tampilkan_submenu()
-        pilihan = input_angka("Pilih menu: ", 0, 5)
-
-        if pilihan == 1:
-            tindakan = lihat_menu_layanan(data)
-            if tindakan == "utama":
-                return False
-        elif pilihan == 2:
-            indeks_baru = tambah_layanan(data)
-            if indeks_baru is not None and konfirmasi("Ingin langsung membuat pesanan?"):
-                input_berat_pesanan(data, indeks_baru)
-        elif pilihan == 3:
-            ubah_layanan(data)
-        elif pilihan == 4:
-            hapus_layanan(data)
-        elif pilihan == 5:
-            input_berat_pesanan(data)
-        else:  # pilihan == 0
-            return False
-
-
-def tampilkan_menu_utama():
-    print()
-    cetak_garis()
-    print("APLIKASI MANAJEMEN LAUNDRY")
-    cetak_garis()
-    print("1. Manajemen Layanan Laundry")
     print("0. Keluar")
     cetak_garis()
 
@@ -427,13 +275,17 @@ def main():
     data = muat_data()  # data dibaca dari file saat program mulai
 
     while True:
-        tampilkan_menu_utama()
-        pilihan = input_angka("Pilih menu: ", 0, 1)
+        tampilkan_menu()
+        pilihan = input_angka("Pilih menu: ", 0, 4)
 
         if pilihan == 1:
-            ingin_keluar = menu_layanan(data)
-            if ingin_keluar:
-                break
+            tampilkan_daftar(data)
+        elif pilihan == 2:
+            tambah_layanan(data)
+        elif pilihan == 3:
+            ubah_layanan(data)
+        elif pilihan == 4:
+            hapus_layanan(data)
         else:  # pilihan == 0
             break
 
