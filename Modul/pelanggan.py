@@ -98,13 +98,124 @@ def buat_id(data):
         nomor = nomor + 1
 
 
-    def cari_pelanggan(data, id_cari):
-        for p in data:
-            if p["id"] == id_cari:
-                return p
-        return None
+def cari_pelanggan(data, id_cari):
+    for p in data:
+        if p["id"] == id_cari:
+            return p
+    return None
 
 
 # ---------- FITUR 1:TAMPILKAN ----------
 def tampilkan(data):
     print("\n=== DAFTAR PELANGGAN ===")
+    if len(data) == 0:
+        print("Belum ada data pelanggan.")
+        return
+    for p in data:
+        print(p["id"], "|", p["nama"], "|", p["telepon"], "|", p["alamat"])
+    print("Total:", len(data), "pelanggan")
+
+
+#---------- FITUR 2: TAMBAH ----------
+def tambah(data):
+    print("\n=== TAMBAH PELANGGAN ===")
+    nama = minta_nama("Nama     : ")
+    telepon = minta_telepon("Telepon : ")
+    alamat = minta_alamat("Alamat  : ")
+
+    pelanggan = {
+        "id": buat_id(data),
+        "nama": nama,
+        "telepon": telepon,
+        "alamat": alamat
+    }
+    data.append(pelanggan)
+    simpan_data(data)
+    print("Berhasil! ID pelanggan:", pelanggan["id"])
+
+
+# ---------- FITUR 3: UBAH ----------
+def ubah(data):
+    print("\n=== UBAH PELANGGAN ===")
+    if len(data) == 0:
+        print("Belum ada data pelanggan.")
+        return
+
+    tampilkan(data)
+    id_cari = input("\nMasukkan ID yang mau diubah: ").strip().upper()
+    pelanggan = cari_pelanggan(data, id_cari)
+
+    if pelanggan == None:
+        print("ID tidak ditemukan!")
+        return
+
+    print("Kosongkan jika tidak ingin diubah.")
+    nama = minta_nama("Nama baru    : ", True)
+    telepon = minta_telepon("Telepon baru : ", True)
+    alamat = minta_alamat("Alamat baru  : ", True)
+
+    if nama != "":
+        pelanggan["nama"] = nama
+    if telepon != "":
+        pelanggan["telepon"] = telepon
+    if alamat != "":
+        pelanggan["alamat"] = alamat
+
+    simpan_data(data)
+    print("Data berhasil diubah.")
+
+
+# ---------- FITUR 4: HAPUS ----------
+def hapus(data):
+    print("\n=== HAPUS PELANGGAN ===")
+    if len(data) == 0:
+        print("Belum ada data pelanggan.")
+        return
+
+    tampilkan(data)
+    id_cari = input("\nMasukkan ID yang mau dihapus: ").strip().upper()
+    pelanggan = cari_pelanggan(data, id_cari)
+
+    if pelanggan == None:
+        print("ID tidak ditemukan!")
+        return
+
+    yakin = input("Yakin hapus " + pelanggan["nama"] + "? (y/n): ").strip().lower()
+    if yakin == "y":
+        data.remove(pelanggan)
+        simpan_data(data)
+        print("Data berhasil dihapus.")
+    else:
+        print("Batal menghapus.")
+
+
+# ---------- MENU ----------
+def menu_pelanggan():
+    data = baca_data()
+    pilihan_menu = ("0", "1", "2", "3", "4")
+
+    while True:
+        print("\n=== MANAJEMEN PELANGGAN ===")
+        print("1. Tambah pelanggan")
+        print("2. Tampilkan pelanggan")
+        print("3. Ubah pelanggan")
+        print("4. Hapus pelanggan")
+        print("0. Kembali")
+        pilihan = input("Pilih: ").strip()
+
+        if pilihan not in pilihan_menu:
+            print("Pilihan salah!")
+        elif pilihan == "1":
+            tambah(data)
+        elif pilihan == "2":
+            tampilkan(data)
+        elif pilihan == "3":
+            ubah(data)
+        elif pilihan == "4":
+            hapus(data)
+        else:
+            break
+
+
+if __name__ == "__main__":
+    menu_pelanggan()
