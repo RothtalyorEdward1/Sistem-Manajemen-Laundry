@@ -25,8 +25,8 @@ def input_berat(pesan):
 
         if berat <= 0:
             print("Berat harus lebih dari 0.")
-        elif berat > 100:
-            print("Berat tidak boleh lebih dari 100 kg.")
+        elif berat > 1000:
+            print("Berat tidak boleh lebih dari 1000 kg.")
         else:
             return round(berat, 2)
 
@@ -223,15 +223,15 @@ def lihat_detail(data):
 # SUBMENU PESANAN (dipanggil dari main.py)
 def tampilkan_menu_pesanan():
     print()
-    layanan.cetak_garis()
+    print("================================")
     print("MANAJEMEN PESANAN LAUNDRY")
-    layanan.cetak_garis()
+    print("================================")
     print("1. Tambah Pesanan")
     print("2. Lihat Daftar Pesanan")
     print("3. Lihat Detail Pesanan")
     print("4. Ubah Status Pesanan")
     print("0. Kembali")
-    layanan.cetak_garis()
+    print("================================")
 
 
 def menu_pesanan(data_layanan):
@@ -251,7 +251,7 @@ def menu_pesanan(data_layanan):
             ubah_status(data)
         else:
             break
-
+# bagian else diubah ke menu utama 
 
 # Jika file ini dijalankan langsung
 if __name__ == "__main__":
