@@ -1,0 +1,27 @@
+[
+    {
+        "nama": "Cuci Strika",
+        "harga": 8000,
+        "estimasi_jam": 48
+    },
+    {
+        "nama": "Setrika Saja",
+        "harga": 5000,
+        "estimasi_jam": 24
+    },
+    {
+        "nama": "Cuci Saja",
+        "harga": 6000,
+        "estimasi_jam": 24
+    },
+    {
+        "nama": "Express",
+        "harga": 12000,
+        "estimasi_jam": 6
+    },
+    {
+        "nama": "setrika aja",
+        "harga": 5000,
+        "estimasi_jam": 4
+    }
+]
