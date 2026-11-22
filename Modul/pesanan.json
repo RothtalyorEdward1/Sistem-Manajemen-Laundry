@@ -1,0 +1,12 @@
+[
+    {
+        "kode": "P0001",
+        "pelanggan": "rein",
+        "telepon": "086376486736473",
+        "layanan": "Cuci setrika",
+        "harga_per_kg": 8000,
+        "berat_kg": 3.0,
+        "total": 24000,
+        "status": "Diproses"
+    }
+]
