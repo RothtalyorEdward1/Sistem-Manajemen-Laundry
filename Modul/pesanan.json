@@ -16,5 +16,41 @@
         ],
         "status": "Diterima",
         "tanggal": "23-11-2026 19:38:45"
+    },
+    {
+        "id": "ORD002",
+        "pelanggan_id": "P001",
+        "nama_pelanggan": "Reer",
+        "telepon": "565667788765",
+        "alamat": "dfgfg",
+        "daftar_layanan": [
+            {
+                "nama_layanan": "Cuci setrika",
+                "berat": 3.0,
+                "harga_per_kg": 8000,
+                "estimasi_jam": 48,
+                "subtotal": 24000.0
+            }
+        ],
+        "status": "Diterima",
+        "tanggal": "23-11-2026 22:17:29"
+    },
+    {
+        "id": "ORD003",
+        "pelanggan_id": "P001",
+        "nama_pelanggan": "Reer",
+        "telepon": "565667788765",
+        "alamat": "dfgfg",
+        "daftar_layanan": [
+            {
+                "nama_layanan": "cuci baju cosplay",
+                "berat": 3.0,
+                "harga_per_kg": 30000,
+                "estimasi_jam": 2,
+                "subtotal": 90000.0
+            }
+        ],
+        "status": "Diterima",
+        "tanggal": "23-11-2026 22:18:08"
     }
 ]
