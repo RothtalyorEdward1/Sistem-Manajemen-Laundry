@@ -16,12 +16,7 @@
     },
     {
         "nama": "Express",
-        "harga": 12000,
+        "harga": 25000,
         "estimasi_jam": 6
-    },
-    {
-        "nama": "setrika aja",
-        "harga": 5000,
-        "estimasi_jam": 4
     }
 ]
