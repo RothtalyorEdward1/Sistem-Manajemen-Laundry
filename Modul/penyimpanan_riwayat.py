@@ -34,27 +34,12 @@ from datetime import datetime
 # 1. KONFIGURASI DIREKTORI & NAMA FILE PENYIMPANAN
 # ==============================================================================
 DIREKTORI_MODUL = os.path.dirname(os.path.abspath(__file__))
-DIREKTORI_UTAMA = os.path.dirname(DIREKTORI_MODUL)
 
-# Lokasi file JSON (fleksibel: memeriksa direktori Modul maupun direktori utama)
-def _tentukan_path_file(nama_file_modul, nama_file_utama=None):
-    if nama_file_utama is None:
-        nama_file_utama = nama_file_modul
-    path_di_modul = os.path.join(DIREKTORI_MODUL, nama_file_modul)
-    path_di_utama = os.path.join(DIREKTORI_UTAMA, nama_file_utama)
-    # Jika file sudah ada di folder utama, prioritaskan path tersebut
-    if os.path.exists(path_di_utama):
-        return path_di_utama
-    # Jika ada di folder modul, gunakan path modul
-    if os.path.exists(path_di_modul):
-        return path_di_modul
-    # Default lokasi simpan baru
-    return path_di_modul
-
-FILE_PELANGGAN = _tentukan_path_file("data_pelanggan.json", "data_pelanggan.json")
-FILE_LAYANAN = _tentukan_path_file("layanan.json", "layanan.json")
-FILE_PESANAN = _tentukan_path_file("pesanan.json", "pesanan.json")
-FILE_PEMBAYARAN = _tentukan_path_file("riwayat_pembayaran.json", "riwayat_pembayaran.json")
+# Seluruh file database JSON tersimpan terpusat di dalam folder 'Modul'
+FILE_PELANGGAN = os.path.join(DIREKTORI_MODUL, "data_pelanggan.json")
+FILE_LAYANAN = os.path.join(DIREKTORI_MODUL, "layanan.json")
+FILE_PESANAN = os.path.join(DIREKTORI_MODUL, "pesanan.json")
+FILE_PEMBAYARAN = os.path.join(DIREKTORI_MODUL, "riwayat_pembayaran.json")
 FILE_EKSPOR_LAPORAN = os.path.join(DIREKTORI_MODUL, "laporan_pendapatan.txt")
 
 # ==============================================================================
