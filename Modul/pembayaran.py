@@ -1,5 +1,5 @@
 from datetime import datetime
-from penyimpana_riwayat import (
+from penyimpanan_riwayat import (
     simpan_data_pesanan,
     simpan_riwayat_pembayaran,
 )
@@ -74,10 +74,10 @@ def proses_pembayaran(
         b.get("no_transaksi", "").upper() for b in riwayat_pembayaran
     }
 
-    # Filter pesanan yang belum dibayar
+    # Filter pesanan yang belum dibayar (mendukung 'no_transaksi' maupun 'kode')
     pesanan_belum_lunas = [
         p for p in daftar_pesanan
-        if p.get("no_transaksi", "").upper() not in transaksi_lunas
+        if (p.get("no_transaksi") or p.get("kode", "")).upper() not in transaksi_lunas
         and p.get("status_bayar", "belum").lower() != "lunas"
     ]
 
@@ -86,7 +86,7 @@ def proses_pembayaran(
         return
 
     map_pelanggan = {
-        p.get("id_pelanggan", "").upper(): p for p in daftar_pelanggan
+        p.get("id_pelanggan", p.get("id", "")).upper(): p for p in daftar_pelanggan
     }
 
     print("Daftar Pesanan Belum Lunas:")
@@ -97,20 +97,21 @@ def proses_pembayaran(
     )
     print("-" * 78)
     for item in pesanan_belum_lunas:
-        no_trx = item.get("no_transaksi", "-")
-        id_plg = item.get("id_pelanggan", "-").upper()
-        nama_plg = map_pelanggan.get(id_plg, {}).get("nama", id_plg)
-        nama_lyn, harga_kg = _cari_layanan(item.get("id_layanan", ""), daftar_layanan)
+        no_trx = item.get("no_transaksi") or item.get("kode", "-")
+        id_plg = item.get("id_pelanggan") or item.get("id") or item.get("pelanggan", "-")
+        nama_plg = map_pelanggan.get(str(id_plg).upper(), {}).get("nama", item.get("pelanggan", str(id_plg)))
+        layanan_val = item.get("id_layanan") or item.get("layanan", "")
+        nama_lyn, harga_kg = _cari_layanan(layanan_val, daftar_layanan)
         berat = item.get("berat_kg", 0)
-        biaya_awal = item.get("total_biaya", berat * harga_kg)
+        biaya_awal = item.get("total_biaya") or item.get("total", berat * harga_kg)
 
         print(
-            f"{no_trx:<10} | {nama_plg[:18]:<18} | {nama_lyn[:15]:<15} | "
+            f"{no_trx:<10} | {str(nama_plg)[:18]:<18} | {str(nama_lyn)[:15]:<15} | "
             f"{berat:<4} kg | Rp{biaya_awal:<10,.0f}"
         )
     print("-" * 78)
 
-    target_trx = input("Masukkan No. Transaksi yang akan dibayar (0 untuk batal): ").strip().upper()
+    target_trx = input("Masukkan No. Transaksi / Kode yang akan dibayar (0 untuk batal): ").strip().upper()
     if target_trx == "0" or not target_trx:
         print("[INFO] Proses pembayaran dibatalkan.")
         return
@@ -118,12 +119,13 @@ def proses_pembayaran(
     # Cari objek pesanan
     pesanan_terpilih = None
     for p in daftar_pesanan:
-        if p.get("no_transaksi", "").upper() == target_trx:
+        trx_kode = (p.get("no_transaksi") or p.get("kode", "")).upper()
+        if trx_kode == target_trx:
             pesanan_terpilih = p
             break
 
     if not pesanan_terpilih:
-        print(f"[ERROR] Nomor transaksi '{target_trx}' tidak ditemukan.")
+        print(f"[ERROR] Nomor transaksi / kode '{target_trx}' tidak ditemukan.")
         return
 
     if target_trx in transaksi_lunas or pesanan_terpilih.get("status_bayar", "").lower() == "lunas":
@@ -131,13 +133,14 @@ def proses_pembayaran(
         return
 
     # Ambil detail pelanggan, layanan, dan hitung biaya awal
-    id_plg = pesanan_terpilih.get("id_pelanggan", "").upper()
-    data_plg = map_pelanggan.get(id_plg, {})
-    nama_plg = data_plg.get("nama", "Pelanggan Umum")
-    nama_lyn, harga_kg = _cari_layanan(pesanan_terpilih.get("id_layanan", ""), daftar_layanan)
+    id_plg = pesanan_terpilih.get("id_pelanggan") or pesanan_terpilih.get("id") or pesanan_terpilih.get("pelanggan", "-")
+    data_plg = map_pelanggan.get(str(id_plg).upper(), {})
+    nama_plg = data_plg.get("nama", pesanan_terpilih.get("pelanggan", str(id_plg)))
+    layanan_val = pesanan_terpilih.get("id_layanan") or pesanan_terpilih.get("layanan", "")
+    nama_lyn, harga_kg = _cari_layanan(layanan_val, daftar_layanan)
     berat_kg = pesanan_terpilih.get("berat_kg", 0)
 
-    biaya_awal = pesanan_terpilih.get("total_biaya", 0)
+    biaya_awal = pesanan_terpilih.get("total_biaya") or pesanan_terpilih.get("total", 0)
     if biaya_awal <= 0 and harga_kg > 0:
         biaya_awal = berat_kg * harga_kg
 
@@ -185,8 +188,8 @@ def proses_pembayaran(
     # Struktur dictionary disinkronkan dengan penyimpanan_riwayat.py (memakai key 'total_tagihan')
     catatan_pembayaran = {
         "id_pembayaran": id_pembayaran,
-        "no_transaksi": pesanan_terpilih["no_transaksi"],
-        "id_pelanggan": pesanan_terpilih["id_pelanggan"],
+        "no_transaksi": pesanan_terpilih.get("no_transaksi") or pesanan_terpilih.get("kode", "-"),
+        "id_pelanggan": pesanan_terpilih.get("id_pelanggan") or pesanan_terpilih.get("id") or pesanan_terpilih.get("pelanggan", "-"),
         "nama_pelanggan": nama_plg,
         "nama_layanan": nama_lyn,
         "berat_kg": berat_kg,
@@ -218,9 +221,9 @@ def lihat_bukti_transaksi(riwayat_pembayaran):
         print("[INFO] Belum ada riwayat pembayaran yang tersimpan.")
         return
 
-    target_trx = input("Masukkan No. Transaksi (contoh: TRX001): ").strip().upper()
+    target_trx = input("Masukkan No. Transaksi / ID Bayar (contoh: P0001 / PAY001): ").strip().upper()
     for bayar in riwayat_pembayaran:
-        if bayar.get("no_transaksi", "").upper() == target_trx:
+        if bayar.get("no_transaksi", "").upper() == target_trx or bayar.get("id_pembayaran", "").upper() == target_trx:
             cetak_bukti_transaksi(bayar)
             return
 
