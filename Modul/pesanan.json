@@ -1,12 +1,20 @@
 [
     {
-        "kode": "P0001",
-        "pelanggan": "rein",
-        "telepon": "086376486736473",
-        "layanan": "Cuci setrika",
-        "harga_per_kg": 8000,
-        "berat_kg": 3.0,
-        "total": 24000,
-        "status": "Diproses"
+        "id": "ORD001",
+        "pelanggan_id": "P001",
+        "nama_pelanggan": "Rewrw",
+        "telepon": "34653674747",
+        "alamat": "sdg",
+        "daftar_layanan": [
+            {
+                "nama_layanan": "Cuci setrika",
+                "berat": 2.0,
+                "harga_per_kg": 8000,
+                "estimasi_jam": 48,
+                "subtotal": 16000.0
+            }
+        ],
+        "status": "Diterima",
+        "tanggal": "23-11-2026 16:25:37"
     }
 ]
