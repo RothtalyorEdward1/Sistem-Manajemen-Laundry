@@ -52,5 +52,22 @@
         ],
         "status": "Diterima",
         "tanggal": "23-11-2026 22:18:08"
+    },
+    {
+        "id": "ORD004",
+        "pelanggan_id": "P001",
+        "nama_pelanggan": "Reer",
+        "telepon": "565667788765",
+        "alamat": "dfgfg",
+        "daftar_layanan": [
+            {
+                "nama_layanan": "Cuci setrika",
+                "berat": 3.0,
+                "harga_per_kg": 8000,
+                "estimasi_jam": 48,
+                "subtotal": 24000.0
+            }
+        ],
+        "status": "Diterima"
     }
 ]

@@ -1,8 +1,8 @@
 
+
 import json
 import os
 import layanan
-from datetime import datetime
 
 
 # ==========================================
@@ -14,12 +14,7 @@ FOLDER_PROGRAM = os.path.dirname(os.path.abspath(__file__))
 FILE_PESANAN = os.path.join(FOLDER_PROGRAM, "pesanan.json")
 FILE_PELANGGAN = os.path.join(FOLDER_PROGRAM, "data_pelanggan.json")
 
-STATUS_PESANAN = (
-    "Diterima",
-    "Diproses",
-    "Selesai",
-    "Diambil"
-)
+STATUS_PESANAN = ("Diterima", "Diproses", "Selesai", "Diambil")
 
 
 # ==========================================
@@ -36,9 +31,9 @@ def baca_pesanan():
 
         if isinstance(data, list):
             return data
-
-        print("Format data pesanan tidak sesuai.")
-        return []
+        else:
+            print("Format data pesanan tidak sesuai.")
+            return []
 
     except (json.JSONDecodeError, OSError) as error:
         print("Gagal membaca data pesanan:", error)
@@ -49,7 +44,6 @@ def simpan_pesanan(data):
     try:
         with open(FILE_PESANAN, "w") as file:
             json.dump(data, file, indent=4)
-
         return True
 
     except OSError as error:
@@ -64,8 +58,8 @@ def baca_pelanggan():
 
         if isinstance(data, list):
             return data
-
-        return []
+        else:
+            return []
 
     except (json.JSONDecodeError, OSError) as error:
         print("Gagal membaca data pelanggan:", error)
@@ -80,10 +74,10 @@ def input_teks(pesan):
     while True:
         teks = input(pesan).strip()
 
-        if teks:
+        if teks != "":
             return teks
-
-        print("Input tidak boleh kosong!")
+        else:
+            print("Input tidak boleh kosong!")
 
 
 def input_angka(pesan, minimal=0):
@@ -93,8 +87,8 @@ def input_angka(pesan, minimal=0):
 
             if angka >= minimal:
                 return angka
-
-            print("Angka minimal adalah", minimal)
+            else:
+                print("Angka minimal adalah", minimal)
 
         except ValueError:
             print("Masukkan angka bulat yang benar!")
@@ -107,8 +101,8 @@ def input_berat(pesan):
 
             if berat > 0:
                 return berat
-
-            print("Berat harus lebih dari 0 kg!")
+            else:
+                print("Berat harus lebih dari 0 kg!")
 
         except ValueError:
             print("Masukkan berat dalam angka!")
@@ -135,8 +129,8 @@ def buat_id_pesanan(data):
 
         if kode not in id_terpakai:
             return kode
-
-        nomor += 1
+        else:
+            nomor += 1
 
 
 # ==========================================
@@ -168,23 +162,23 @@ def tampilkan_daftar_pesanan(data):
     print("DAFTAR PESANAN LAUNDRY")
     print("=" * 60)
 
-    if not data:
+    if len(data) == 0:
         print("Belum ada pesanan.")
         return
+    else:
+        print(f"{'No':<5}{'Kode':<12}{'Pelanggan':<25}{'Status':<15}")
+        print("-" * 60)
 
-    print(f"{'No':<5}{'Kode':<12}{'Pelanggan':<25}{'Status':<15}")
-    print("-" * 60)
+        for nomor, pesanan in enumerate(data, start=1):
+            print(
+                f"{nomor:<5}"
+                f"{pesanan['id']:<12}"
+                f"{pesanan['nama_pelanggan']:<25}"
+                f"{pesanan['status']:<15}"
+            )
 
-    for nomor, pesanan in enumerate(data, start=1):
-        print(
-            f"{nomor:<5}"
-            f"{pesanan['id']:<12}"
-            f"{pesanan['nama_pelanggan']:<25}"
-            f"{pesanan['status']:<15}"
-        )
-
-    print("-" * 60)
-    print("Total pesanan:", len(data))
+        print("-" * 60)
+        print("Total pesanan:", len(data))
 
 
 # ==========================================
@@ -199,31 +193,31 @@ def tambah_pesanan(data):
     # Memilih pelanggan
     pelanggan_data = baca_pelanggan()
 
-    if not pelanggan_data:
+    if len(pelanggan_data) == 0:
         print("Belum ada pelanggan. Tambahkan pelanggan dahulu.")
         return
-
-    kode = input_teks("Masukkan kode pelanggan: ").upper()
-    pelanggan = cari_pelanggan(pelanggan_data, kode)
+    else:
+        kode = input_teks("Masukkan kode pelanggan: ").upper()
+        pelanggan = cari_pelanggan(pelanggan_data, kode)
 
     if pelanggan is None:
         print("Kode pelanggan tidak ditemukan!")
         return
-
-    print("\nData Pelanggan")
-    print("Kode    :", pelanggan["id"])
-    print("Nama    :", pelanggan["nama"])
-    print("Telepon :", pelanggan["telepon"])
-    print("Alamat  :", pelanggan["alamat"])
+    else:
+        print("\nData Pelanggan")
+        print("Kode    :", pelanggan["id"])
+        print("Nama    :", pelanggan["nama"])
+        print("Telepon :", pelanggan["telepon"])
+        print("Alamat  :", pelanggan["alamat"])
 
     # Mengambil daftar layanan
     daftar_layanan = layanan.muat_data()
 
-    if not daftar_layanan:
+    if len(daftar_layanan) == 0:
         print("Belum tersedia layanan laundry.")
         return
-
-    daftar_barang = []
+    else:
+        daftar_barang = []
 
     # Memilih layanan
     while True:
@@ -232,50 +226,57 @@ def tambah_pesanan(data):
         print("\nPilih layanan yang ingin ditambahkan.")
         print("Masukkan 0 jika selesai memilih.")
 
-        nomor = input_angka("Nomor layanan: ", minimal=0)
+        nomor = input_angka("Nomor layanan: ", 0)
 
         if nomor == 0:
-            if daftar_barang:
+            if len(daftar_barang) > 0:
                 break
+            else:
+                print("Minimal pilih satu layanan!")
+                continue
 
-            print("Minimal pilih satu layanan!")
-            continue
+        elif nomor <= len(daftar_layanan):
+            jenis = daftar_layanan[nomor - 1]
+            berat = input_berat("Masukkan berat pakaian (kg): ")
 
-        if nomor > len(daftar_layanan):
+            subtotal = berat * jenis["harga"]
+
+            barang = {
+                "nama_layanan": jenis["nama"],
+                "berat": berat,
+                "harga_per_kg": jenis["harga"],
+                "estimasi_jam": jenis["estimasi_jam"],
+                "subtotal": subtotal
+            }
+
+            daftar_barang.append(barang)
+
+            print("\nLayanan berhasil ditambahkan!")
+            print("Layanan :", jenis["nama"])
+            print("Berat   :", berat, "kg")
+            print("Subtotal:", format_rupiah(subtotal))
+
+            while True:
+                tambah_lagi = input(
+                    "\nTambah jenis layanan lain? (y/t): "
+                ).strip().lower()
+
+                if tambah_lagi == "t" or tambah_lagi == "tidak" or tambah_lagi == "n":
+                    break
+                elif tambah_lagi == "y" or tambah_lagi == "ya":
+                    break
+                else:
+                    print("Jawaban tidak valid!")
+
+            if tambah_lagi == "t" or tambah_lagi == "tidak" or tambah_lagi == "n":
+                break
+            elif tambah_lagi == "y" or tambah_lagi == "ya":
+                continue
+
+        else:
             print("Nomor layanan tidak tersedia!")
-            continue
 
-        jenis = daftar_layanan[nomor - 1]
-        berat = input_berat("Masukkan berat pakaian (kg): ")
-
-        subtotal = berat * jenis["harga"]
-
-        barang = {
-            "nama_layanan": jenis["nama"],
-            "berat": berat,
-            "harga_per_kg": jenis["harga"],
-            "estimasi_jam": jenis["estimasi_jam"],
-            "subtotal": subtotal
-        }
-
-        daftar_barang.append(barang)
-
-        print("\nLayanan berhasil ditambahkan!")
-        print("Layanan :", jenis["nama"])
-        print("Berat   :", berat, "kg")
-        print("Subtotal:", format_rupiah(subtotal))
-
-        tambah_lagi = input(
-            "\nTambah jenis layanan lain? (y/t): "
-        ).strip().lower()
-
-        if tambah_lagi in ("t", "tidak", "n"):
-            break
-
-        if tambah_lagi not in ("y", "ya"):
-            print("Jawaban tidak valid.")
-
-    # Membuat data pesanan baru
+    # Membuat pesanan baru
     pesanan_baru = {
         "id": buat_id_pesanan(data),
         "pelanggan_id": pelanggan["id"],
@@ -283,8 +284,7 @@ def tambah_pesanan(data):
         "telepon": pelanggan["telepon"],
         "alamat": pelanggan["alamat"],
         "daftar_layanan": daftar_barang,
-        "status": STATUS_PESANAN[0],
-        "tanggal": datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+        "status": STATUS_PESANAN[0]
     }
 
     data.append(pesanan_baru)
@@ -308,7 +308,6 @@ def tampilkan_struk(pesanan):
     print("Kode Pesanan  :", pesanan["id"])
     print("Kode Pelanggan:", pesanan["pelanggan_id"])
     print("Nama Pelanggan:", pesanan["nama_pelanggan"])
-    print("Tanggal       :", pesanan["tanggal"])
 
     print("-" * 50)
     print("RINCIAN LAYANAN")
@@ -334,18 +333,17 @@ def tampilkan_struk(pesanan):
 def detail_pesanan(data):
     print("\n--- DETAIL PESANAN ---")
 
-    if not data:
+    if len(data) == 0:
         print("Belum ada pesanan.")
         return
-
-    kode = input_teks("Masukkan kode pesanan: ").upper()
-    pesanan = cari_pesanan(data, kode)
+    else:
+        kode = input_teks("Masukkan kode pesanan: ").upper()
+        pesanan = cari_pesanan(data, kode)
 
     if pesanan is None:
         print("Pesanan tidak ditemukan!")
-        return
-
-    tampilkan_struk(pesanan)
+    else:
+        tampilkan_struk(pesanan)
 
 
 # ==========================================
@@ -355,11 +353,11 @@ def detail_pesanan(data):
 def ubah_status(data):
     print("\n--- UBAH STATUS PESANAN ---")
 
-    if not data:
+    if len(data) == 0:
         print("Belum ada pesanan.")
         return
-
-    tampilkan_daftar_pesanan(data)
+    else:
+        tampilkan_daftar_pesanan(data)
 
     kode = input_teks("Masukkan kode pesanan: ").upper()
     pesanan = cari_pesanan(data, kode)
@@ -367,36 +365,35 @@ def ubah_status(data):
     if pesanan is None:
         print("Pesanan tidak ditemukan!")
         return
-
-    print("\nKode Pesanan:", pesanan["id"])
-    print("Pelanggan   :", pesanan["nama_pelanggan"])
-    print("Status Lama :", pesanan["status"])
+    else:
+        print("\nKode Pesanan:", pesanan["id"])
+        print("Pelanggan   :", pesanan["nama_pelanggan"])
+        print("Status Lama :", pesanan["status"])
 
     print("\nPilihan Status")
 
     for nomor, status in enumerate(STATUS_PESANAN, start=1):
         print(f"{nomor}. {status}")
 
-    pilihan = input_angka("Pilih status baru: ", minimal=1)
+    pilihan = input_angka("Pilih status baru: ", 1)
 
-    if pilihan > len(STATUS_PESANAN):
-        print("Pilihan status tidak tersedia!")
-        return
+    if pilihan <= len(STATUS_PESANAN):
+        status_lama = pesanan["status"]
+        status_baru = STATUS_PESANAN[pilihan - 1]
 
-    status_lama = pesanan["status"]
-    status_baru = STATUS_PESANAN[pilihan - 1]
+        if status_lama == status_baru:
+            print("Status pesanan sudah menggunakan status tersebut.")
+            return
+        else:
+            pesanan["status"] = status_baru
 
-    if status_lama == status_baru:
-        print("Status pesanan sudah menggunakan status tersebut.")
-        return
-
-    pesanan["status"] = status_baru
-
-    if simpan_pesanan(data):
-        print("\nStatus pesanan berhasil diubah!")
-        print("Status baru:", status_baru)
+            if simpan_pesanan(data):
+                print("\nStatus pesanan berhasil diubah!")
+                print("Status baru:", status_baru)
+            else:
+                pesanan["status"] = status_lama
     else:
-        pesanan["status"] = status_lama
+        print("Pilihan status tidak tersedia!")
 
 
 # ==========================================
@@ -406,11 +403,11 @@ def ubah_status(data):
 def hapus_pesanan(data):
     print("\n--- HAPUS PESANAN ---")
 
-    if not data:
+    if len(data) == 0:
         print("Belum ada pesanan.")
         return
-
-    tampilkan_daftar_pesanan(data)
+    else:
+        tampilkan_daftar_pesanan(data)
 
     kode = input_teks("Masukkan kode pesanan yang dihapus: ").upper()
     pesanan = cari_pesanan(data, kode)
@@ -418,22 +415,25 @@ def hapus_pesanan(data):
     if pesanan is None:
         print("Pesanan tidak ditemukan!")
         return
-
-    print("Pelanggan:", pesanan["nama_pelanggan"])
+    else:
+        print("Pelanggan:", pesanan["nama_pelanggan"])
 
     yakin = input("Yakin ingin menghapus pesanan? (y/t): ").strip().lower()
 
-    if yakin not in ("y", "ya"):
+    if yakin == "y" or yakin == "ya":
+        indeks = data.index(pesanan)
+        data.pop(indeks)
+
+        if simpan_pesanan(data):
+            print("Pesanan berhasil dihapus.")
+        else:
+            data.insert(indeks, pesanan)
+            print("Gagal menghapus pesanan.")
+
+    elif yakin == "t" or yakin == "tidak" or yakin == "n":
         print("Penghapusan dibatalkan.")
-        return
-
-    indeks = data.index(pesanan)
-    data.pop(indeks)
-
-    if simpan_pesanan(data):
-        print("Pesanan berhasil dihapus.")
     else:
-        data.insert(indeks, pesanan)
+        print("Pilihan tidak valid!")
 
 
 # ==========================================
@@ -468,22 +468,16 @@ def main():
 
         if pilihan == "1":
             tambah_pesanan(data)
-
         elif pilihan == "2":
             tampilkan_daftar_pesanan(data)
-
         elif pilihan == "3":
             detail_pesanan(data)
-
         elif pilihan == "4":
             ubah_status(data)
-
         elif pilihan == "5":
             hapus_pesanan(data)
-
         elif pilihan == "0":
             break
-
         else:
             print("Pilihan tidak valid!")
 
@@ -502,7 +496,6 @@ if __name__ == "__main__":
 # import json
 # import os
 # import layanan
-# from datetime import datetime
 
 
 # # ==========================================
@@ -534,17 +527,14 @@ if __name__ == "__main__":
 #         with open(FILE_PESANAN, "r") as file:
 #             data = json.load(file)
 
-#         if not isinstance(data, list):
-#             raise ValueError("Format data tidak sesuai.")
+#         if isinstance(data, list):
+#             return data
 
-#         return data
-
-#     except (json.JSONDecodeError, ValueError):
-#         print("File pesanan bermasalah.")
+#         print("Format data pesanan tidak sesuai.")
 #         return []
 
-#     except OSError as error:
-#         print("Gagal membaca data:", error)
+#     except (json.JSONDecodeError, OSError) as error:
+#         print("Gagal membaca data pesanan:", error)
 #         return []
 
 
@@ -565,17 +555,13 @@ if __name__ == "__main__":
 #         with open(FILE_PELANGGAN, "r") as file:
 #             data = json.load(file)
 
-#         if not isinstance(data, list):
-#             return []
+#         if isinstance(data, list):
+#             return data
 
-#         return data
-
-#     except FileNotFoundError:
-#         print("Data pelanggan belum tersedia.")
 #         return []
 
-#     except (json.JSONDecodeError, OSError):
-#         print("Gagal membaca data pelanggan.")
+#     except (json.JSONDecodeError, OSError) as error:
+#         print("Gagal membaca data pelanggan:", error)
 #         return []
 
 
@@ -587,7 +573,7 @@ if __name__ == "__main__":
 #     while True:
 #         teks = input(pesan).strip()
 
-#         if teks != "":
+#         if teks:
 #             return teks
 
 #         print("Input tidak boleh kosong!")
@@ -598,10 +584,10 @@ if __name__ == "__main__":
 #         try:
 #             angka = int(input(pesan))
 
-#             if angka < minimal:
-#                 print("Angka minimal adalah", minimal)
-#             else:
+#             if angka >= minimal:
 #                 return angka
+
+#             print("Angka minimal adalah", minimal)
 
 #         except ValueError:
 #             print("Masukkan angka bulat yang benar!")
@@ -612,10 +598,10 @@ if __name__ == "__main__":
 #         try:
 #             berat = float(input(pesan).replace(",", "."))
 
-#             if berat <= 0:
-#                 print("Berat harus lebih dari 0 kg!")
-#             else:
+#             if berat > 0:
 #                 return berat
+
+#             print("Berat harus lebih dari 0 kg!")
 
 #         except ValueError:
 #             print("Masukkan berat dalam angka!")
@@ -638,10 +624,10 @@ if __name__ == "__main__":
 #     nomor = 1
 
 #     while True:
-#         id_baru = f"ORD{nomor:03d}"
+#         kode = f"ORD{nomor:03d}"
 
-#         if id_baru not in id_terpakai:
-#             return id_baru
+#         if kode not in id_terpakai:
+#             return kode
 
 #         nomor += 1
 
@@ -671,26 +657,18 @@ if __name__ == "__main__":
 # # ==========================================
 
 # def tampilkan_daftar_pesanan(data):
-
 #     print("\n" + "=" * 60)
 #     print("DAFTAR PESANAN LAUNDRY")
 #     print("=" * 60)
 
-#     if len(data) == 0:
+#     if not data:
 #         print("Belum ada pesanan.")
 #         return
 
-#     print(
-#         f"{'No':<5}"
-#         f"{'Kode':<12}"
-#         f"{'Pelanggan':<25}"
-#         f"{'Status':<15}"
-#     )
-
+#     print(f"{'No':<5}{'Kode':<12}{'Pelanggan':<25}{'Status':<15}")
 #     print("-" * 60)
 
 #     for nomor, pesanan in enumerate(data, start=1):
-
 #         print(
 #             f"{nomor:<5}"
 #             f"{pesanan['id']:<12}"
@@ -707,26 +685,19 @@ if __name__ == "__main__":
 # # ==========================================
 
 # def tambah_pesanan(data):
-
 #     print("\n" + "=" * 40)
 #     print("TAMBAH PESANAN LAUNDRY")
 #     print("=" * 40)
 
-#     # Mengambil data pelanggan
+#     # Memilih pelanggan
 #     pelanggan_data = baca_pelanggan()
 
-#     if len(pelanggan_data) == 0:
+#     if not pelanggan_data:
 #         print("Belum ada pelanggan. Tambahkan pelanggan dahulu.")
 #         return
 
-#     kode_pelanggan = input_teks(
-#         "Masukkan kode pelanggan: "
-#     ).upper()
-
-#     pelanggan = cari_pelanggan(
-#         pelanggan_data,
-#         kode_pelanggan
-#     )
+#     kode = input_teks("Masukkan kode pelanggan: ").upper()
+#     pelanggan = cari_pelanggan(pelanggan_data, kode)
 
 #     if pelanggan is None:
 #         print("Kode pelanggan tidak ditemukan!")
@@ -738,49 +709,40 @@ if __name__ == "__main__":
 #     print("Telepon :", pelanggan["telepon"])
 #     print("Alamat  :", pelanggan["alamat"])
 
-#     # Mengambil daftar layanan dari layanan.py
+#     # Mengambil daftar layanan
 #     daftar_layanan = layanan.muat_data()
 
-#     if len(daftar_layanan) == 0:
+#     if not daftar_layanan:
 #         print("Belum tersedia layanan laundry.")
 #         return
 
 #     daftar_barang = []
 
-#     # Menampilkan pilihan layanan
+#     # Memilih layanan
 #     while True:
-
 #         layanan.tampilkan_daftar(daftar_layanan)
 
 #         print("\nPilih layanan yang ingin ditambahkan.")
-#         print("Masukkan 0 jika sudah selesai memilih.")
+#         print("Masukkan 0 jika selesai memilih.")
 
-#         nomor = input_angka(
-#             "Nomor layanan: ",
-#             minimal=0
-#         )
+#         nomor = input_angka("Nomor layanan: ", minimal=0)
 
 #         if nomor == 0:
+#             if daftar_barang:
+#                 break
 
-#             if len(daftar_barang) == 0:
-#                 print("Minimal pilih satu layanan!")
-#                 continue
-
-#             break
+#             print("Minimal pilih satu layanan!")
+#             continue
 
 #         if nomor > len(daftar_layanan):
 #             print("Nomor layanan tidak tersedia!")
 #             continue
 
 #         jenis = daftar_layanan[nomor - 1]
-
-#         berat = input_berat(
-#             "Masukkan berat pakaian (kg): "
-#         )
+#         berat = input_berat("Masukkan berat pakaian (kg): ")
 
 #         subtotal = berat * jenis["harga"]
 
-#         # Menyimpan setiap layanan ke dalam list
 #         barang = {
 #             "nama_layanan": jenis["nama"],
 #             "berat": berat,
@@ -803,10 +765,10 @@ if __name__ == "__main__":
 #         if tambah_lagi in ("t", "tidak", "n"):
 #             break
 
-#         elif tambah_lagi not in ("y", "ya"):
+#         if tambah_lagi not in ("y", "ya"):
 #             print("Jawaban tidak valid.")
 
-#     # Membuat data pesanan
+#     # Membuat data pesanan baru
 #     pesanan_baru = {
 #         "id": buat_id_pesanan(data),
 #         "pelanggan_id": pelanggan["id"],
@@ -814,20 +776,14 @@ if __name__ == "__main__":
 #         "telepon": pelanggan["telepon"],
 #         "alamat": pelanggan["alamat"],
 #         "daftar_layanan": daftar_barang,
-#         "status": "Diterima",
-#         "tanggal": datetime.now().strftime(
-#             "%d-%m-%Y %H:%M:%S"
-#         )
+#         "status": STATUS_PESANAN[0],
 #     }
 
-#     # Menyimpan transaksi
 #     data.append(pesanan_baru)
 
 #     if simpan_pesanan(data):
-
 #         print("\nPesanan berhasil disimpan!")
 #         tampilkan_struk(pesanan_baru)
-
 #     else:
 #         data.remove(pesanan_baru)
 
@@ -837,40 +793,26 @@ if __name__ == "__main__":
 # # ==========================================
 
 # def tampilkan_struk(pesanan):
-
-#     print("\n")
-#     print("=" * 50)
+#     print("\n" + "=" * 50)
 #     print("              STRUK LAUNDRY")
 #     print("=" * 50)
 
-#     print("Kode Pesanan :", pesanan["id"])
+#     print("Kode Pesanan  :", pesanan["id"])
 #     print("Kode Pelanggan:", pesanan["pelanggan_id"])
 #     print("Nama Pelanggan:", pesanan["nama_pelanggan"])
 #     print("Tanggal       :", pesanan["tanggal"])
 
 #     print("-" * 50)
-
 #     print("RINCIAN LAYANAN")
 
-#     for nomor, barang in enumerate(
-#         pesanan["daftar_layanan"], start=1
-#     ):
-
+#     for nomor, barang in enumerate(pesanan["daftar_layanan"], start=1):
 #         print(f"\n{nomor}. {barang['nama_layanan']}")
-#         print("   Berat       :", barang["berat"], "kg")
-#         print(
-#             "   Harga/kg   :",
-#             format_rupiah(barang["harga_per_kg"])
-#         )
-#         print(
-#             "   Subtotal   :",
-#             format_rupiah(barang["subtotal"])
-#         )
+#         print("   Berat     :", barang["berat"], "kg")
+#         print("   Harga/kg :", format_rupiah(barang["harga_per_kg"]))
+#         print("   Subtotal :", format_rupiah(barang["subtotal"]))
 
 #     print("-" * 50)
-
-#     print("Status Pesanan   :", pesanan["status"])
-
+#     print("Status Pesanan:", pesanan["status"])
 #     print("=" * 50)
 #     print("       TERIMA KASIH TELAH MENGGUNAKAN")
 #     print("             JASA LAUNDRY KAMI")
@@ -882,17 +824,13 @@ if __name__ == "__main__":
 # # ==========================================
 
 # def detail_pesanan(data):
-
 #     print("\n--- DETAIL PESANAN ---")
 
-#     if len(data) == 0:
+#     if not data:
 #         print("Belum ada pesanan.")
 #         return
 
-#     kode = input_teks(
-#         "Masukkan kode pesanan: "
-#     ).upper()
-
+#     kode = input_teks("Masukkan kode pesanan: ").upper()
 #     pesanan = cari_pesanan(data, kode)
 
 #     if pesanan is None:
@@ -907,48 +845,40 @@ if __name__ == "__main__":
 # # ==========================================
 
 # def ubah_status(data):
-
 #     print("\n--- UBAH STATUS PESANAN ---")
 
-#     if len(data) == 0:
+#     if not data:
 #         print("Belum ada pesanan.")
 #         return
 
 #     tampilkan_daftar_pesanan(data)
 
-#     kode = input_teks(
-#         "\nMasukkan kode pesanan: "
-#     ).upper()
-
+#     kode = input_teks("Masukkan kode pesanan: ").upper()
 #     pesanan = cari_pesanan(data, kode)
 
 #     if pesanan is None:
-#         print("Kode pesanan tidak ditemukan!")
+#         print("Pesanan tidak ditemukan!")
 #         return
 
-#     print("\nKode Pesanan :", pesanan["id"])
-#     print("Pelanggan    :", pesanan["nama_pelanggan"])
-#     print("Status Lama  :", pesanan["status"])
+#     print("\nKode Pesanan:", pesanan["id"])
+#     print("Pelanggan   :", pesanan["nama_pelanggan"])
+#     print("Status Lama :", pesanan["status"])
 
 #     print("\nPilihan Status")
 
-#     for nomor, status in enumerate(
-#         STATUS_PESANAN, start=1
-#     ):
+#     for nomor, status in enumerate(STATUS_PESANAN, start=1):
 #         print(f"{nomor}. {status}")
 
-#     pilihan = input_angka(
-#         "Pilih status baru: ",
-#         minimal=1
-#     )
+#     pilihan = input_angka("Pilih status baru: ", minimal=1)
 
 #     if pilihan > len(STATUS_PESANAN):
 #         print("Pilihan status tidak tersedia!")
 #         return
 
+#     status_lama = pesanan["status"]
 #     status_baru = STATUS_PESANAN[pilihan - 1]
 
-#     if pesanan["status"].lower() == status_baru.lower():
+#     if status_lama == status_baru:
 #         print("Status pesanan sudah menggunakan status tersebut.")
 #         return
 
@@ -957,6 +887,8 @@ if __name__ == "__main__":
 #     if simpan_pesanan(data):
 #         print("\nStatus pesanan berhasil diubah!")
 #         print("Status baru:", status_baru)
+#     else:
+#         pesanan["status"] = status_lama
 
 
 # # ==========================================
@@ -964,19 +896,15 @@ if __name__ == "__main__":
 # # ==========================================
 
 # def hapus_pesanan(data):
-
 #     print("\n--- HAPUS PESANAN ---")
 
-#     if len(data) == 0:
+#     if not data:
 #         print("Belum ada pesanan.")
 #         return
 
 #     tampilkan_daftar_pesanan(data)
 
-#     kode = input_teks(
-#         "\nMasukkan kode pesanan yang dihapus: "
-#     ).upper()
-
+#     kode = input_teks("Masukkan kode pesanan yang dihapus: ").upper()
 #     pesanan = cari_pesanan(data, kode)
 
 #     if pesanan is None:
@@ -985,23 +913,19 @@ if __name__ == "__main__":
 
 #     print("Pelanggan:", pesanan["nama_pelanggan"])
 
-#     yakin = input(
-#         "Yakin ingin menghapus pesanan? (y/t): "
-#     ).strip().lower()
+#     yakin = input("Yakin ingin menghapus pesanan? (y/t): ").strip().lower()
 
-#     if yakin in ("y", "ya"):
-
-#         indeks = data.index(pesanan)
-#         data.pop(indeks)
-
-#         if simpan_pesanan(data):
-#             print("Pesanan berhasil dihapus.")
-
-#         else:
-#             data.insert(indeks, pesanan)
-
-#     else:
+#     if yakin not in ("y", "ya"):
 #         print("Penghapusan dibatalkan.")
+#         return
+
+#     indeks = data.index(pesanan)
+#     data.pop(indeks)
+
+#     if simpan_pesanan(data):
+#         print("Pesanan berhasil dihapus.")
+#     else:
+#         data.insert(indeks, pesanan)
 
 
 # # ==========================================
@@ -1009,7 +933,6 @@ if __name__ == "__main__":
 # # ==========================================
 
 # def tampilkan_menu():
-
 #     print("\n" + "=" * 40)
 #     print("       MANAJEMEN PESANAN LAUNDRY")
 #     print("=" * 40)
@@ -1029,54 +952,623 @@ if __name__ == "__main__":
 # # ==========================================
 
 # def main():
-
 #     data = baca_pesanan()
 
 #     while True:
-
 #         tampilkan_menu()
-
-#         pilihan = input(
-#             "Pilih menu: "
-#         ).strip()
+#         pilihan = input("Pilih menu: ").strip()
 
 #         if pilihan == "1":
-
 #             tambah_pesanan(data)
 
 #         elif pilihan == "2":
-
 #             tampilkan_daftar_pesanan(data)
 
 #         elif pilihan == "3":
-
 #             detail_pesanan(data)
 
 #         elif pilihan == "4":
-
 #             ubah_status(data)
 
 #         elif pilihan == "5":
-
 #             hapus_pesanan(data)
 
 #         elif pilihan == "0":
-
 #             break
 
 #         else:
-
 #             print("Pilihan tidak valid!")
 
 #     print("\nKembali ke menu sebelumnya.")
 
 
 # if __name__ == "__main__":
-
 #     try:
 #         main()
 
 #     except (KeyboardInterrupt, EOFError):
 #         print("\nProgram dihentikan.")
+
+
+
+# # import json
+# # import os
+# # import layanan
+# # from datetime import datetime
+
+
+# # # ==========================================
+# # # PENGATURAN DATA
+# # # ==========================================
+
+# # FOLDER_PROGRAM = os.path.dirname(os.path.abspath(__file__))
+
+# # FILE_PESANAN = os.path.join(FOLDER_PROGRAM, "pesanan.json")
+# # FILE_PELANGGAN = os.path.join(FOLDER_PROGRAM, "data_pelanggan.json")
+
+# # STATUS_PESANAN = (
+# #     "Diterima",
+# #     "Diproses",
+# #     "Selesai",
+# #     "Diambil"
+# # )
+
+
+# # # ==========================================
+# # # MEMBACA DAN MENYIMPAN DATA
+# # # ==========================================
+
+# # def baca_pesanan():
+# #     if not os.path.exists(FILE_PESANAN):
+# #         return []
+
+# #     try:
+# #         with open(FILE_PESANAN, "r") as file:
+# #             data = json.load(file)
+
+# #         if not isinstance(data, list):
+# #             raise ValueError("Format data tidak sesuai.")
+
+# #         return data
+
+# #     except (json.JSONDecodeError, ValueError):
+# #         print("File pesanan bermasalah.")
+# #         return []
+
+# #     except OSError as error:
+# #         print("Gagal membaca data:", error)
+# #         return []
+
+
+# # def simpan_pesanan(data):
+# #     try:
+# #         with open(FILE_PESANAN, "w") as file:
+# #             json.dump(data, file, indent=4)
+
+# #         return True
+
+# #     except OSError as error:
+# #         print("Gagal menyimpan pesanan:", error)
+# #         return False
+
+
+# # def baca_pelanggan():
+# #     try:
+# #         with open(FILE_PELANGGAN, "r") as file:
+# #             data = json.load(file)
+
+# #         if not isinstance(data, list):
+# #             return []
+
+# #         return data
+
+# #     except FileNotFoundError:
+# #         print("Data pelanggan belum tersedia.")
+# #         return []
+
+# #     except (json.JSONDecodeError, OSError):
+# #         print("Gagal membaca data pelanggan.")
+# #         return []
+
+
+# # # ==========================================
+# # # VALIDASI INPUT
+# # # ==========================================
+
+# # def input_teks(pesan):
+# #     while True:
+# #         teks = input(pesan).strip()
+
+# #         if teks != "":
+# #             return teks
+
+# #         print("Input tidak boleh kosong!")
+
+
+# # def input_angka(pesan, minimal=0):
+# #     while True:
+# #         try:
+# #             angka = int(input(pesan))
+
+# #             if angka < minimal:
+# #                 print("Angka minimal adalah", minimal)
+# #             else:
+# #                 return angka
+
+# #         except ValueError:
+# #             print("Masukkan angka bulat yang benar!")
+
+
+# # def input_berat(pesan):
+# #     while True:
+# #         try:
+# #             berat = float(input(pesan).replace(",", "."))
+
+# #             if berat <= 0:
+# #                 print("Berat harus lebih dari 0 kg!")
+# #             else:
+# #                 return berat
+
+# #         except ValueError:
+# #             print("Masukkan berat dalam angka!")
+
+
+# # def format_rupiah(angka):
+# #     return "Rp " + f"{angka:,.0f}".replace(",", ".")
+
+
+# # # ==========================================
+# # # MEMBUAT KODE PESANAN
+# # # ==========================================
+
+# # def buat_id_pesanan(data):
+# #     id_terpakai = set()
+
+# #     for pesanan in data:
+# #         id_terpakai.add(pesanan["id"])
+
+# #     nomor = 1
+
+# #     while True:
+# #         id_baru = f"ORD{nomor:03d}"
+
+# #         if id_baru not in id_terpakai:
+# #             return id_baru
+
+# #         nomor += 1
+
+
+# # # ==========================================
+# # # MENCARI DATA
+# # # ==========================================
+
+# # def cari_pelanggan(data, kode):
+# #     for pelanggan in data:
+# #         if pelanggan["id"] == kode:
+# #             return pelanggan
+
+# #     return None
+
+
+# # def cari_pesanan(data, kode):
+# #     for pesanan in data:
+# #         if pesanan["id"] == kode:
+# #             return pesanan
+
+# #     return None
+
+
+# # # ==========================================
+# # # MENAMPILKAN DAFTAR PESANAN
+# # # ==========================================
+
+# # def tampilkan_daftar_pesanan(data):
+
+# #     print("\n" + "=" * 60)
+# #     print("DAFTAR PESANAN LAUNDRY")
+# #     print("=" * 60)
+
+# #     if len(data) == 0:
+# #         print("Belum ada pesanan.")
+# #         return
+
+# #     print(
+# #         f"{'No':<5}"
+# #         f"{'Kode':<12}"
+# #         f"{'Pelanggan':<25}"
+# #         f"{'Status':<15}"
+# #     )
+
+# #     print("-" * 60)
+
+# #     for nomor, pesanan in enumerate(data, start=1):
+
+# #         print(
+# #             f"{nomor:<5}"
+# #             f"{pesanan['id']:<12}"
+# #             f"{pesanan['nama_pelanggan']:<25}"
+# #             f"{pesanan['status']:<15}"
+# #         )
+
+# #     print("-" * 60)
+# #     print("Total pesanan:", len(data))
+
+
+# # # ==========================================
+# # # MENAMBAH PESANAN
+# # # ==========================================
+
+# # def tambah_pesanan(data):
+
+# #     print("\n" + "=" * 40)
+# #     print("TAMBAH PESANAN LAUNDRY")
+# #     print("=" * 40)
+
+# #     # Mengambil data pelanggan
+# #     pelanggan_data = baca_pelanggan()
+
+# #     if len(pelanggan_data) == 0:
+# #         print("Belum ada pelanggan. Tambahkan pelanggan dahulu.")
+# #         return
+
+# #     kode_pelanggan = input_teks(
+# #         "Masukkan kode pelanggan: "
+# #     ).upper()
+
+# #     pelanggan = cari_pelanggan(
+# #         pelanggan_data,
+# #         kode_pelanggan
+# #     )
+
+# #     if pelanggan is None:
+# #         print("Kode pelanggan tidak ditemukan!")
+# #         return
+
+# #     print("\nData Pelanggan")
+# #     print("Kode    :", pelanggan["id"])
+# #     print("Nama    :", pelanggan["nama"])
+# #     print("Telepon :", pelanggan["telepon"])
+# #     print("Alamat  :", pelanggan["alamat"])
+
+# #     # Mengambil daftar layanan dari layanan.py
+# #     daftar_layanan = layanan.muat_data()
+
+# #     if len(daftar_layanan) == 0:
+# #         print("Belum tersedia layanan laundry.")
+# #         return
+
+# #     daftar_barang = []
+
+# #     # Menampilkan pilihan layanan
+# #     while True:
+
+# #         layanan.tampilkan_daftar(daftar_layanan)
+
+# #         print("\nPilih layanan yang ingin ditambahkan.")
+# #         print("Masukkan 0 jika sudah selesai memilih.")
+
+# #         nomor = input_angka(
+# #             "Nomor layanan: ",
+# #             minimal=0
+# #         )
+
+# #         if nomor == 0:
+
+# #             if len(daftar_barang) == 0:
+# #                 print("Minimal pilih satu layanan!")
+# #                 continue
+
+# #             break
+
+# #         if nomor > len(daftar_layanan):
+# #             print("Nomor layanan tidak tersedia!")
+# #             continue
+
+# #         jenis = daftar_layanan[nomor - 1]
+
+# #         berat = input_berat(
+# #             "Masukkan berat pakaian (kg): "
+# #         )
+
+# #         subtotal = berat * jenis["harga"]
+
+# #         # Menyimpan setiap layanan ke dalam list
+# #         barang = {
+# #             "nama_layanan": jenis["nama"],
+# #             "berat": berat,
+# #             "harga_per_kg": jenis["harga"],
+# #             "estimasi_jam": jenis["estimasi_jam"],
+# #             "subtotal": subtotal
+# #         }
+
+# #         daftar_barang.append(barang)
+
+# #         print("\nLayanan berhasil ditambahkan!")
+# #         print("Layanan :", jenis["nama"])
+# #         print("Berat   :", berat, "kg")
+# #         print("Subtotal:", format_rupiah(subtotal))
+
+# #         tambah_lagi = input(
+# #             "\nTambah jenis layanan lain? (y/t): "
+# #         ).strip().lower()
+
+# #         if tambah_lagi in ("t", "tidak", "n"):
+# #             break
+
+# #         elif tambah_lagi not in ("y", "ya"):
+# #             print("Jawaban tidak valid.")
+
+# #     # Membuat data pesanan
+# #     pesanan_baru = {
+# #         "id": buat_id_pesanan(data),
+# #         "pelanggan_id": pelanggan["id"],
+# #         "nama_pelanggan": pelanggan["nama"],
+# #         "telepon": pelanggan["telepon"],
+# #         "alamat": pelanggan["alamat"],
+# #         "daftar_layanan": daftar_barang,
+# #         "status": "Diterima",
+# #         "tanggal": datetime.now().strftime(
+# #             "%d-%m-%Y %H:%M:%S"
+# #         )
+# #     }
+
+# #     # Menyimpan transaksi
+# #     data.append(pesanan_baru)
+
+# #     if simpan_pesanan(data):
+
+# #         print("\nPesanan berhasil disimpan!")
+# #         tampilkan_struk(pesanan_baru)
+
+# #     else:
+# #         data.remove(pesanan_baru)
+
+
+# # # ==========================================
+# # # MENAMPILKAN STRUK
+# # # ==========================================
+
+# # def tampilkan_struk(pesanan):
+
+# #     print("\n")
+# #     print("=" * 50)
+# #     print("              STRUK LAUNDRY")
+# #     print("=" * 50)
+
+# #     print("Kode Pesanan :", pesanan["id"])
+# #     print("Kode Pelanggan:", pesanan["pelanggan_id"])
+# #     print("Nama Pelanggan:", pesanan["nama_pelanggan"])
+# #     print("Tanggal       :", pesanan["tanggal"])
+
+# #     print("-" * 50)
+
+# #     print("RINCIAN LAYANAN")
+
+# #     for nomor, barang in enumerate(
+# #         pesanan["daftar_layanan"], start=1
+# #     ):
+
+# #         print(f"\n{nomor}. {barang['nama_layanan']}")
+# #         print("   Berat       :", barang["berat"], "kg")
+# #         print(
+# #             "   Harga/kg   :",
+# #             format_rupiah(barang["harga_per_kg"])
+# #         )
+# #         print(
+# #             "   Subtotal   :",
+# #             format_rupiah(barang["subtotal"])
+# #         )
+
+# #     print("-" * 50)
+
+# #     print("Status Pesanan   :", pesanan["status"])
+
+# #     print("=" * 50)
+# #     print("       TERIMA KASIH TELAH MENGGUNAKAN")
+# #     print("             JASA LAUNDRY KAMI")
+# #     print("=" * 50)
+
+
+# # # ==========================================
+# # # MELIHAT DETAIL PESANAN
+# # # ==========================================
+
+# # def detail_pesanan(data):
+
+# #     print("\n--- DETAIL PESANAN ---")
+
+# #     if len(data) == 0:
+# #         print("Belum ada pesanan.")
+# #         return
+
+# #     kode = input_teks(
+# #         "Masukkan kode pesanan: "
+# #     ).upper()
+
+# #     pesanan = cari_pesanan(data, kode)
+
+# #     if pesanan is None:
+# #         print("Pesanan tidak ditemukan!")
+# #         return
+
+# #     tampilkan_struk(pesanan)
+
+
+# # # ==========================================
+# # # MENGUBAH STATUS PESANAN
+# # # ==========================================
+
+# # def ubah_status(data):
+
+# #     print("\n--- UBAH STATUS PESANAN ---")
+
+# #     if len(data) == 0:
+# #         print("Belum ada pesanan.")
+# #         return
+
+# #     tampilkan_daftar_pesanan(data)
+
+# #     kode = input_teks(
+# #         "\nMasukkan kode pesanan: "
+# #     ).upper()
+
+# #     pesanan = cari_pesanan(data, kode)
+
+# #     if pesanan is None:
+# #         print("Kode pesanan tidak ditemukan!")
+# #         return
+
+# #     print("\nKode Pesanan :", pesanan["id"])
+# #     print("Pelanggan    :", pesanan["nama_pelanggan"])
+# #     print("Status Lama  :", pesanan["status"])
+
+# #     print("\nPilihan Status")
+
+# #     for nomor, status in enumerate(
+# #         STATUS_PESANAN, start=1
+# #     ):
+# #         print(f"{nomor}. {status}")
+
+# #     pilihan = input_angka(
+# #         "Pilih status baru: ",
+# #         minimal=1
+# #     )
+
+# #     if pilihan > len(STATUS_PESANAN):
+# #         print("Pilihan status tidak tersedia!")
+# #         return
+
+# #     status_baru = STATUS_PESANAN[pilihan - 1]
+
+# #     if pesanan["status"].lower() == status_baru.lower():
+# #         print("Status pesanan sudah menggunakan status tersebut.")
+# #         return
+
+# #     pesanan["status"] = status_baru
+
+# #     if simpan_pesanan(data):
+# #         print("\nStatus pesanan berhasil diubah!")
+# #         print("Status baru:", status_baru)
+
+
+# # # ==========================================
+# # # MENGHAPUS PESANAN
+# # # ==========================================
+
+# # def hapus_pesanan(data):
+
+# #     print("\n--- HAPUS PESANAN ---")
+
+# #     if len(data) == 0:
+# #         print("Belum ada pesanan.")
+# #         return
+
+# #     tampilkan_daftar_pesanan(data)
+
+# #     kode = input_teks(
+# #         "\nMasukkan kode pesanan yang dihapus: "
+# #     ).upper()
+
+# #     pesanan = cari_pesanan(data, kode)
+
+# #     if pesanan is None:
+# #         print("Pesanan tidak ditemukan!")
+# #         return
+
+# #     print("Pelanggan:", pesanan["nama_pelanggan"])
+
+# #     yakin = input(
+# #         "Yakin ingin menghapus pesanan? (y/t): "
+# #     ).strip().lower()
+
+# #     if yakin in ("y", "ya"):
+
+# #         indeks = data.index(pesanan)
+# #         data.pop(indeks)
+
+# #         if simpan_pesanan(data):
+# #             print("Pesanan berhasil dihapus.")
+
+# #         else:
+# #             data.insert(indeks, pesanan)
+
+# #     else:
+# #         print("Penghapusan dibatalkan.")
+
+
+# # # ==========================================
+# # # MENU UTAMA PESANAN
+# # # ==========================================
+
+# # def tampilkan_menu():
+
+# #     print("\n" + "=" * 40)
+# #     print("       MANAJEMEN PESANAN LAUNDRY")
+# #     print("=" * 40)
+
+# #     print("1. Tambah Pesanan")
+# #     print("2. Lihat Daftar Pesanan")
+# #     print("3. Lihat Detail Pesanan")
+# #     print("4. Ubah Status Pesanan")
+# #     print("5. Hapus Pesanan")
+# #     print("0. Kembali")
+
+# #     print("=" * 40)
+
+
+# # # ==========================================
+# # # PROGRAM UTAMA
+# # # ==========================================
+
+# # def main():
+
+# #     data = baca_pesanan()
+
+# #     while True:
+
+# #         tampilkan_menu()
+
+# #         pilihan = input(
+# #             "Pilih menu: "
+# #         ).strip()
+
+# #         if pilihan == "1":
+
+# #             tambah_pesanan(data)
+
+# #         elif pilihan == "2":
+
+# #             tampilkan_daftar_pesanan(data)
+
+# #         elif pilihan == "3":
+
+# #             detail_pesanan(data)
+
+# #         elif pilihan == "4":
+
+# #             ubah_status(data)
+
+# #         elif pilihan == "5":
+
+# #             hapus_pesanan(data)
+
+# #         elif pilihan == "0":
+
+# #             break
+
+# #         else:
+
+# #             print("Pilihan tidak valid!")
+
+# #     print("\nKembali ke menu sebelumnya.")
+
+
+# # if __name__ == "__main__":
+
+# #     try:
+# #         main()
+
+# #     except (KeyboardInterrupt, EOFError):
+# #         print("\nProgram dihentikan.")
 
 
