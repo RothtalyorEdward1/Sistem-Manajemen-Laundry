@@ -27,11 +27,12 @@ if DIREKTORI_UTAMA not in sys.path:
 
 # Impor Modul Aplikasi
 try:
-    import penyimpanan_riwayat
-    import pelanggan
-    import layanan
-    import pesanan
-    import pembayaran
+    import Modul.penyimpanan_riwayat
+    import Modul.pelanggan
+    import Modul.layanan
+    import Modul.pesanan
+    import Modul.pembayaran
+
 except ImportError as e:
     import traceback
     print(f"[ERROR] Gagal memuat modul: {e}")
@@ -66,7 +67,7 @@ def main():
 
     # Membaca kembali data ketika aplikasi dijalankan (Ketentuan Fitur 5)
     print("[INFO] Membaca data tersimpan dari file...")
-    data_sistem = penyimpanan_riwayat.muat_semua_data()
+    data_sistem = Modul.penyimpanan_riwayat.muat_semua_data()
     print(
         f"[INFO] Data berhasil dimuat: "
         f"{len(data_sistem['pelanggan'])} Pelanggan, "
@@ -87,31 +88,31 @@ def main():
 
         if pilihan == "1":
             # 1. Manajemen Pelanggan
-            pelanggan.menu_pelanggan()
+            Modul.pelanggan.menu_pelanggan()
             # Sinkronisasi data pelanggan terbaru
-            data_sistem["pelanggan"] = penyimpanan_riwayat.muat_data_pelanggan()
+            Modul.data_sistem["pelanggan"] = Modul.penyimpanan_riwayat.muat_data_pelanggan()
 
         elif pilihan == "2":
             # 2. Manajemen Layanan
-            layanan.main()
+            Modul.layanan.main()
             # Sinkronisasi data layanan terbaru
-            data_sistem["layanan"] = penyimpanan_riwayat.muat_data_layanan()
+            data_sistem["layanan"] = Modul.penyimpanan_riwayat.muat_data_layanan()
 
         elif pilihan == "3":
             # 3. Manajemen Pesanan (memerlukan data layanan terbaru)
-            data_sistem["layanan"] = penyimpanan_riwayat.muat_data_layanan()
-            pesanan.menu_pesanan(data_sistem["layanan"])
+            data_sistem["layanan"] = Modul.penyimpanan_riwayat.muat_data_layanan()
+            Modul.pesanan.menu_pesanan(data_sistem["layanan"])
             # Sinkronisasi data pesanan terbaru
-            data_sistem["pesanan"] = penyimpanan_riwayat.muat_data_pesanan()
+            data_sistem["pesanan"] = Modul.penyimpanan_riwayat.muat_data_pesanan()
 
         elif pilihan == "4":
             # 4. Transaksi Pembayaran Kasir
-            data_sistem["pelanggan"] = penyimpanan_riwayat.muat_data_pelanggan()
-            data_sistem["layanan"] = penyimpanan_riwayat.muat_data_layanan()
-            data_sistem["pesanan"] = penyimpanan_riwayat.muat_data_pesanan()
-            data_sistem["pembayaran"] = penyimpanan_riwayat.muat_riwayat_pembayaran()
+            data_sistem["pelanggan"] = Modul.penyimpanan_riwayat.muat_data_pelanggan()
+            data_sistem["layanan"] = Modul.penyimpanan_riwayat.muat_data_layanan()
+            data_sistem["pesanan"] = Modul.penyimpanan_riwayat.muat_data_pesanan()
+            data_sistem["pembayaran"] = Modul.penyimpanan_riwayat.muat_riwayat_pembayaran()
 
-            pembayaran.menu_pembayaran(
+            Modul.pembayaran.menu_pembayaran(
                 daftar_pelanggan=data_sistem["pelanggan"],
                 daftar_layanan=data_sistem["layanan"],
                 daftar_pesanan=data_sistem["pesanan"],
@@ -120,12 +121,12 @@ def main():
 
         elif pilihan == "5":
             # 5. Riwayat dan Penyimpanan Data
-            data_sistem["pelanggan"] = penyimpanan_riwayat.muat_data_pelanggan()
-            data_sistem["layanan"] = penyimpanan_riwayat.muat_data_layanan()
-            data_sistem["pesanan"] = penyimpanan_riwayat.muat_data_pesanan()
-            data_sistem["pembayaran"] = penyimpanan_riwayat.muat_riwayat_pembayaran()
+            data_sistem["pelanggan"] = Modul.penyimpanan_riwayat.muat_data_pelanggan()
+            data_sistem["layanan"] = Modul.penyimpanan_riwayat.muat_data_layanan()
+            data_sistem["pesanan"] = Modul.penyimpanan_riwayat.muat_data_pesanan()
+            data_sistem["pembayaran"] = Modul.penyimpanan_riwayat.muat_riwayat_pembayaran()
 
-            penyimpanan_riwayat.menu_riwayat(
+            Modul.penyimpanan_riwayat.menu_riwayat(
                 daftar_pelanggan=data_sistem["pelanggan"],
                 daftar_layanan=data_sistem["layanan"],
                 daftar_pesanan=data_sistem["pesanan"],
@@ -135,7 +136,7 @@ def main():
         elif pilihan == "0":
             # 0. Simpan & Keluar
             print("\n[INFO] Menyimpan seluruh data sistem...")
-            penyimpanan_riwayat.simpan_semua_data(
+            Modul.penyimpanan_riwayat.simpan_semua_data(
                 daftar_pelanggan=data_sistem["pelanggan"],
                 daftar_layanan=data_sistem["layanan"],
                 daftar_pesanan=data_sistem["pesanan"],
