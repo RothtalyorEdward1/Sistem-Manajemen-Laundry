@@ -69,5 +69,22 @@
             }
         ],
         "status": "Diterima"
+    },
+    {
+        "id": "ORD005",
+        "pelanggan_id": "P001",
+        "nama_pelanggan": "Reer",
+        "telepon": "565667788765",
+        "alamat": "dfgfg",
+        "daftar_layanan": [
+            {
+                "nama_layanan": "Setrika Saja",
+                "berat": 78.0,
+                "harga_per_kg": 5000,
+                "estimasi_jam": 24,
+                "subtotal": 390000.0
+            }
+        ],
+        "status": "Diterima"
     }
 ]

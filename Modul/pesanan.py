@@ -1,20 +1,18 @@
 
 
-import json
-import os
-import layanan
-
+import json #Memanggil library json yang sudah tersedia di Python. Digunakan untuk membaca dan menyimpan data dalam format JSON.
+import os #Memanggil library json yang sudah tersedia di Python. Digunakan untuk membaca dan menyimpan data dalam format JSON.
+import layanan #Memanggil file Python bernama layanan.py. Memungkinkan program pesanan.py menggunakan fungsi yang sudah dibuat di dalam layanan.py.
 
 # ==========================================
 # PENGATURAN DATA
 # ==========================================
 
-FOLDER_PROGRAM = os.path.dirname(os.path.abspath(__file__))
+FOLDER_PROGRAM = os.path.dirname(os.path.abspath(__file__)) #Menentukan lokasi folder tempat file pesanan.py berada.
+FILE_PESANAN = os.path.join(FOLDER_PROGRAM, "pesanan.json") # Menentukan alamat lengkap file untuk menyimpan data pesanan. os.path.join() digunakan untuk menggabungkan lokasi folder dengan nama file.
+FILE_PELANGGAN = os.path.join(FOLDER_PROGRAM, "data_pelanggan.json") #Menentukan lokasi file yang berisi data pelanggan. Mengapa dibutuhkan? Ketika pelanggan ingin membuat pesanan, program harus memeriksa apakah kode pelanggan yang dimasukkan benar-benar terdaftar.
 
-FILE_PESANAN = os.path.join(FOLDER_PROGRAM, "pesanan.json")
-FILE_PELANGGAN = os.path.join(FOLDER_PROGRAM, "data_pelanggan.json")
-
-STATUS_PESANAN = ("Diterima", "Diproses", "Selesai", "Diambil")
+STATUS_PESANAN = ("Diterima", "Diproses", "Selesai", "Diambil") #Menyediakan daftar status yang dapat digunakan dalam pengelolaan pesanan.
 
 
 # ==========================================
@@ -22,14 +20,14 @@ STATUS_PESANAN = ("Diterima", "Diproses", "Selesai", "Diambil")
 # ==========================================
 
 def baca_pesanan():
-    if not os.path.exists(FILE_PESANAN):
+    if not os.path.exists(FILE_PESANAN): #Memeriksa apakah file pesanan.json sudah tersedia. Penjelasan: os.path.exists() memeriksa keberadaan file. not membalik hasil pemeriksaan. if menjalankan perintah jika kondisi benar.
         return []
 
     try:
         with open(FILE_PESANAN, "r") as file:
-            data = json.load(file)
+            data = json.load(file) #Mengambil isi file JSON dan mengubahnya menjadi tipe data Python.
 
-        if isinstance(data, list):
+        if isinstance(data, list): #Memeriksa apakah data yang dibaca benar-benar berbentuk list. isinstance() merupakan fungsi bawaan Python untuk memeriksa tipe data suatu objek.
             return data
         else:
             print("Format data pesanan tidak sesuai.")
@@ -43,7 +41,7 @@ def baca_pesanan():
 def simpan_pesanan(data):
     try:
         with open(FILE_PESANAN, "w") as file:
-            json.dump(data, file, indent=4)
+            json.dump(data, file, indent=4)  #json.dump Karena data yang digunakan dalam Python berbentuk list dan dictionary, sedangkan file penyimpanannya berbentuk JSON
         return True
 
     except OSError as error:
@@ -54,7 +52,7 @@ def simpan_pesanan(data):
 def baca_pelanggan():
     try:
         with open(FILE_PELANGGAN, "r") as file:
-            data = json.load(file)
+            data = json.load(file) #mengambil isi file JSON.
 
         if isinstance(data, list):
             return data
@@ -97,7 +95,7 @@ def input_angka(pesan, minimal=0):
 def input_berat(pesan):
     while True:
         try:
-            berat = float(input(pesan).replace(",", "."))
+            berat = float(input(pesan).replace(",", ".")) #replace(",", ".") Mengganti tanda koma menjadi titik.
 
             if berat > 0:
                 return berat
@@ -109,7 +107,7 @@ def input_berat(pesan):
 
 
 def format_rupiah(angka):
-    return "Rp " + f"{angka:,.0f}".replace(",", ".")
+    return "Rp " + f"{angka:,.0f}".replace(",", ".") #angka: Nilai yang ingin ditampilkan. ,: Memberikan pemisah ribuan. .0f: Menampilkan angka tanpa angka desimal.
 
 
 # ==========================================
@@ -117,10 +115,10 @@ def format_rupiah(angka):
 # ==========================================
 
 def buat_id_pesanan(data):
-    id_terpakai = set()
+    id_terpakai = set() #Set merupakan tipe data Python yang digunakan untuk menyimpan kumpulan nilai unik atau tidak memiliki duplikasi. Mengapa menggunakan set? Karena program ingin mengumpulkan seluruh kode pesanan yang sudah digunakan.
 
     for pesanan in data:
-        id_terpakai.add(pesanan["id"])
+        id_terpakai.add(pesanan["id"]) #Menambahkan kode pesanan yang sudah ada ke dalam set id_terpakai.
 
     nomor = 1
 
