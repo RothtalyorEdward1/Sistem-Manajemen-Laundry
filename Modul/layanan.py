@@ -26,19 +26,19 @@ JAWABAN_TIDAK = {"t", "tidak", "n"}
 
 # VALIDASI INPUT
 
-def input_teks(pesan, boleh_kosong=False):
+def input_teks(pesan, kosong=False):
     while True:
         teks = input(pesan).strip()
-        if teks != "" or boleh_kosong:
+        if teks != "" or kosong:
             return teks
         print("Input tidak boleh kosong, coba lagi.")
 
 
-def input_angka(pesan, minimal=0, maksimal=None, boleh_kosong=False):
+def input_angka(pesan, minimal=0, maksimal=None, kosong=False):
     while True:
         teks = input(pesan).strip()
 
-        if teks == "" and boleh_kosong:
+        if teks == "" and kosong:
             return None
 
         try:
@@ -57,7 +57,7 @@ def input_angka(pesan, minimal=0, maksimal=None, boleh_kosong=False):
 
 def konfirmasi(pesan):
     while True:
-        jawaban = input(pesan + " (y/t): ").strip().lower()
+        jawaban = input(pesan + " (y/t): ").replace(" ", "").lower()
         if jawaban in JAWABAN_YA:
             return True
         if jawaban in JAWABAN_TIDAK:
@@ -86,13 +86,13 @@ def simpan_data(data):
 
 
 def data_valid(data):
-    if not isinstance(data, list):
+    try:
+        for layanan in data:
+            if not KUNCI_WAJIB <= set(layanan):
+                return False
+        return True
+    except TypeError:
         return False
-    for layanan in data:
-        if not isinstance(layanan, dict) or not KUNCI_WAJIB <= set(layanan):
-            return False
-    return True
-
 
 def muat_data():
     try:
