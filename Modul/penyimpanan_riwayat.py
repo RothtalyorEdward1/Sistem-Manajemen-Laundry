@@ -1,31 +1,3 @@
-"""
-================================================================================
-KELOMPOK C — SISTEM MANAJEMEN LAUNDRY
-Modul: penyimpanan_riwayat.py (Fitur 5: Riwayat dan Penyimpanan Data)
-================================================================================
-Deskripsi:
-Modul ini bertugas menangani seluruh mekanisme penyimpanan data (File I/O JSON),
-pembacaan data saat aplikasi dijalankan, penampilan riwayat pesanan pelanggan,
-penghitungan serta visualisasi total pendapatan laundry.
-
-Ketentuan Materi yang diterapkan:
-1. Variabel, Tipe Data, dan Operator (str, int, float, bool, operator aritmatika & logika).
-2. Percabangan (if, elif, else) dan Perulangan (for, while).
-3. Fungsi terstruktur dan modular.
-4. Struktur Data:
-   - List       : Menyimpan koleksi pesanan, pembayaran, pelanggan, dan layanan.
-   - Tuple      : Menyimpan konstanta opsi menu dan label status yang immutable.
-   - Set        : Menyimpan himpunan unik ID pelanggan, nomor transaksi lunas, dll.
-   - Dictionary : Menyimpan detail objek transaksi, pelanggan, layanan, & ringkasan statistik.
-5. Exception Handling & Penanganan I/O:
-   - try-except (FileNotFoundError, json.JSONDecodeError, OSError, ValueError).
-   - Pembacaan & penyimpanan file JSON secara persisten dan aman.
-   - Fitur ekspor laporan ke file teks (.txt).
-6. Validasi Input agar tidak terjadi crash saat input pengguna salah.
-7. Fitur CRUD: Menampilkan, Menambahkan (Backup/Catat), Mengubah, dan Menghapus riwayat.
-================================================================================
-"""
-
 import json
 import os
 from datetime import datetime

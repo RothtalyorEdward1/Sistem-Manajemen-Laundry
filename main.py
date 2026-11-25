@@ -1,17 +1,3 @@
-"""
-================================================================================
-KELOMPOK C — SISTEM MANAJEMEN LAUNDRY
-File Utama: main.py
-================================================================================
-Aplikasi Terminal / Command Line Interface (CLI) untuk manajemen laundry:
-1. Pengelolaan Pelanggan
-2. Pengelolaan Layanan
-3. Pengelolaan Pesanan
-4. Transaksi & Pembayaran Kasir
-5. Riwayat dan Penyimpanan Data
-================================================================================
-"""
-
 import os
 import sys
 
