@@ -76,7 +76,7 @@ def main():
             # 1. Manajemen Pelanggan
             Modul.pelanggan.menu_pelanggan()
             # Sinkronisasi data pelanggan terbaru
-            Modul.data_sistem["pelanggan"] = Modul.penyimpanan_riwayat.muat_data_pelanggan()
+            data_sistem["pelanggan"] = Modul.penyimpanan_riwayat.muat_data_pelanggan()
 
         elif pilihan == "2":
             # 2. Manajemen Layanan
@@ -85,9 +85,12 @@ def main():
             data_sistem["layanan"] = Modul.penyimpanan_riwayat.muat_data_layanan()
 
         elif pilihan == "3":
-            # 3. Manajemen Pesanan (memerlukan data layanan terbaru)
+            # 3. Manajemen Pesanan
             data_sistem["layanan"] = Modul.penyimpanan_riwayat.muat_data_layanan()
-            Modul.pesanan.menu_pesanan(data_sistem["layanan"])
+            if hasattr(Modul.pesanan, "main"):
+                Modul.pesanan.main()
+            elif hasattr(Modul.pesanan, "menu_pesanan"):
+                Modul.pesanan.menu_pesanan(data_sistem["layanan"])
             # Sinkronisasi data pesanan terbaru
             data_sistem["pesanan"] = Modul.penyimpanan_riwayat.muat_data_pesanan()
 
