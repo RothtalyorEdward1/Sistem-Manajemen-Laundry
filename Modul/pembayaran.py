@@ -1,4 +1,3 @@
-from datetime import datetime
 from penyimpanan_riwayat import (
     simpan_data_pesanan,
     simpan_riwayat_pembayaran,
@@ -183,7 +182,11 @@ def proses_pembayaran(
 
     kembalian = nominal_bayar - total_tagihan
     id_pembayaran = f"PAY{len(riwayat_pembayaran) + 1:03d}"
-    waktu_bayar = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    while True:
+        waktu_bayar = input("Masukkan tanggal pembayaran seperti contoh: (18-11-2026): ").strip()
+        if waktu_bayar:
+            break
+        print("[ERROR] Tanggal pembayaran tidak boleh kosong.")
 
     # Struktur dictionary disinkronkan dengan penyimpanan_riwayat.py (memakai key 'total_tagihan')
     catatan_pembayaran = {
