@@ -103,5 +103,22 @@
             }
         ],
         "status": "Diterima"
+    },
+    {
+        "id": "ORD007",
+        "pelanggan_id": "P001",
+        "nama_pelanggan": "Reer",
+        "telepon": "565667788765",
+        "alamat": "dfgfg",
+        "daftar_layanan": [
+            {
+                "nama_layanan": "Express",
+                "berat": 4.0,
+                "harga_per_kg": 12000,
+                "estimasi_jam": 6,
+                "subtotal": 48000.0
+            }
+        ],
+        "status": "Diterima"
     }
 ]
