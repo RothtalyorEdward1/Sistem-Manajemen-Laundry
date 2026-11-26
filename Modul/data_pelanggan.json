@@ -13,8 +13,14 @@
     },
     {
         "id": "P003",
+<<<<<<< HEAD
         "nama": "Sfc",
         "telepon": "1434334534656",
         "alamat": "gvd"
+=======
+        "nama": "Yuyru",
+        "telepon": "657647637788",
+        "alamat": "thrthd"
+>>>>>>> b1794010ead0b501869270305fc3132274601283
     }
 ]
