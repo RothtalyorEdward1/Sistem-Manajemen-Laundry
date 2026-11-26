@@ -345,6 +345,7 @@ def detail_pesanan(data):
 # MENGUBAH STATUS PESANAN
 # ==========================================
 
+
 def ubah_status(data):
     print("\n--- UBAH STATUS PESANAN ---")
 
@@ -365,6 +366,8 @@ def ubah_status(data):
     print("Pelanggan   :", pesanan["nama_pelanggan"])
     print("Status Lama :", pesanan["status"])
 
+    nomor_status = STATUS_PESANAN.index(pesanan["status"])
+
     print("\nPilihan Status")
 
     for nomor, status in enumerate(STATUS_PESANAN, start=1):
@@ -376,12 +379,12 @@ def ubah_status(data):
         print("Pilihan status tidak tersedia!")
         return
 
+    if pilihan <= nomor_status:
+        print("Status tidak bisa dimundurkan ke status sebelumnya!")
+        return
+
     status_lama = pesanan["status"]
     status_baru = STATUS_PESANAN[pilihan - 1]
-
-    if status_lama == status_baru:
-        print("Status pesanan sudah menggunakan status tersebut.")
-        return
 
     pesanan["status"] = status_baru
 
