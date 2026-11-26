@@ -1,31 +1,3 @@
-"""
-================================================================================
-KELOMPOK C — SISTEM MANAJEMEN LAUNDRY
-Modul: penyimpanan_riwayat.py (Fitur 5: Riwayat dan Penyimpanan Data)
-================================================================================
-Deskripsi:
-Modul ini bertugas menangani seluruh mekanisme penyimpanan data (File I/O JSON),
-pembacaan data saat aplikasi dijalankan, penampilan riwayat pesanan pelanggan,
-penghitungan serta visualisasi total pendapatan laundry.
-
-Ketentuan Materi yang diterapkan:
-1. Variabel, Tipe Data, dan Operator (str, int, float, bool, operator aritmatika & logika).
-2. Percabangan (if, elif, else) dan Perulangan (for, while).
-3. Fungsi terstruktur dan modular.
-4. Struktur Data:
-   - List       : Menyimpan koleksi pesanan, pembayaran, pelanggan, dan layanan.
-   - Tuple      : Menyimpan konstanta opsi menu dan label status yang immutable.
-   - Set        : Menyimpan himpunan unik ID pelanggan, nomor transaksi lunas, dll.
-   - Dictionary : Menyimpan detail objek transaksi, pelanggan, layanan, & ringkasan statistik.
-5. Exception Handling & Penanganan I/O:
-   - try-except (FileNotFoundError, json.JSONDecodeError, OSError, ValueError).
-   - Pembacaan & penyimpanan file JSON secara persisten dan aman.
-   - Fitur ekspor laporan ke file teks (.txt).
-6. Validasi Input agar tidak terjadi crash saat input pengguna salah.
-7. Fitur CRUD: Menampilkan, Menambahkan (Backup/Catat), Mengubah, dan Menghapus riwayat.
-================================================================================
-"""
-
 import json
 import os
 from datetime import datetime
@@ -45,7 +17,7 @@ FILE_EKSPOR_LAPORAN = os.path.join(DIREKTORI_MODUL, "laporan_pendapatan.txt")
 # ==============================================================================
 # 2. TUPLE KONSTANTA (Penerapan Struktur Data Tuple)
 # ==============================================================================
-PILIHAN_MENU_RIWAYAT = ("1", "2", "3", "4", "5", "6", "0")
+PILIHAN_MENU_RIWAYAT = ("1", "2", "3", "4", "0")
 STATUS_PESANAN_TUPLE = ("Diterima", "Diproses", "Selesai", "Diambil")
 STATUS_BAYAR_TUPLE = ("Belum Lunas", "Lunas")
 LEBAR_GARIS = 75
@@ -510,103 +482,7 @@ def ekspor_laporan_pendapatan(stats):
 
 
 # ==============================================================================
-# 7. FITUR MANAJEMEN RIWAYAT (CRUD: UBAH & HAPUS RIWAYAT)
-# ==============================================================================
-def ubah_status_riwayat_pesanan(daftar_pesanan):
-    """Fitur Ubah (CRUD): Memperbarui status pesanan langsung dari riwayat."""
-    print("\n--- UBAH STATUS PENGERJAAN PESANAN ---")
-    if not daftar_pesanan:
-        print("[INFO] Tidak ada data pesanan untuk diubah.")
-        return
-
-    tampilkan_riwayat_pesanan(daftar_pesanan)
-    target = input_teks_valid("Masukkan Kode Pesanan yang akan diubah (0 = batal): ").upper()
-    if target == "0":
-        print("[INFO] Perubahan dibatalkan.")
-        return
-
-    pesanan_target = None
-    for p in daftar_pesanan:
-        if _ambil_kode_pesanan(p).upper() == target:
-            pesanan_target = p
-            break
-
-    if not pesanan_target:
-        print(f"[ERROR] Kode pesanan '{target}' tidak ditemukan.")
-        return
-
-    print(f"\nStatus pesanan saat ini: {pesanan_target.get('status', 'Diterima')}")
-    print("Pilih status baru:")
-    for idx, st in enumerate(STATUS_PESANAN_TUPLE, start=1):
-        print(f"{idx}. {st}")
-
-    pilihan = input_pilihan_menu("Pilih nomor status (1-4): ", ("1", "2", "3", "4"))
-    status_baru = STATUS_PESANAN_TUPLE[int(pilihan) - 1]
-
-    pesanan_target["status"] = status_baru
-    if simpan_data_pesanan(daftar_pesanan):
-        print(f"[SUKSES] Status pesanan '{target}' berhasil diubah menjadi '{status_baru}'!")
-
-
-def hapus_riwayat_transaksi(riwayat_pembayaran, daftar_pesanan):
-    """Fitur Hapus (CRUD): Menghapus catatan riwayat pembayaran atau pesanan dengan konfirmasi."""
-    print("\n--- HAPUS DATA RIWAYAT ---")
-    print("1. Hapus Catatan Riwayat Pembayaran Kasir")
-    print("2. Hapus Catatan Riwayat Pesanan")
-    print("0. Batal")
-
-    pilihan = input_pilihan_menu("Pilih jenis data yang ingin dihapus (0-2): ", ("0", "1", "2"))
-    if pilihan == "0":
-        print("[INFO] Tindakan dibatalkan.")
-        return
-
-    if pilihan == "1":
-        if not riwayat_pembayaran:
-            print("[INFO] Riwayat pembayaran sudah kosong.")
-            return
-        tampilkan_riwayat_pembayaran(riwayat_pembayaran)
-        id_hapus = input_teks_valid("Masukkan ID Pembayaran yang ingin dihapus (contoh: PAY001): ").upper()
-
-        terpilih = None
-        for b in riwayat_pembayaran:
-            if b.get("id_pembayaran", "").upper() == id_hapus:
-                terpilih = b
-                break
-
-        if not terpilih:
-            print(f"[ERROR] ID Pembayaran '{id_hapus}' tidak ditemukan.")
-            return
-
-        if konfirmasi_tindakan(f"Yakin ingin menghapus pembayaran {id_hapus} ({terpilih.get('nama_pelanggan')})?"):
-            riwayat_pembayaran.remove(terpilih)
-            simpan_riwayat_pembayaran(riwayat_pembayaran)
-            print(f"[SUKSES] Riwayat pembayaran '{id_hapus}' berhasil dihapus.")
-
-    elif pilihan == "2":
-        if not daftar_pesanan:
-            print("[INFO] Riwayat pesanan sudah kosong.")
-            return
-        tampilkan_riwayat_pesanan(daftar_pesanan)
-        kode_hapus = input_teks_valid("Masukkan Kode Pesanan yang ingin dihapus: ").upper()
-
-        terpilih = None
-        for p in daftar_pesanan:
-            if _ambil_kode_pesanan(p).upper() == kode_hapus:
-                terpilih = p
-                break
-
-        if not terpilih:
-            print(f"[ERROR] Pesanan dengan kode '{kode_hapus}' tidak ditemukan.")
-            return
-
-        if konfirmasi_tindakan(f"Yakin ingin menghapus pesanan {kode_hapus}?"):
-            daftar_pesanan.remove(terpilih)
-            simpan_data_pesanan(daftar_pesanan)
-            print(f"[SUKSES] Pesanan '{kode_hapus}' berhasil dihapus.")
-
-
-# ==============================================================================
-# 8. SUBMENU INTERAKTIF RIWAYAT & PENYIMPANAN DATA
+# 7. SUBMENU INTERAKTIF RIWAYAT & PENYIMPANAN DATA
 # ==============================================================================
 def tampilkan_header_menu():
     """Menampilkan antarmuka judul menu submenu riwayat."""
@@ -618,8 +494,6 @@ def tampilkan_header_menu():
     print("  2. Cari Riwayat Pesanan Berdasarkan Pelanggan")
     print("  3. Tampilkan Riwayat Pembayaran Kasir")
     print("  4. Tampilkan Total Pendapatan Laundry")
-    print("  5. Ubah Status Pengerjaan Pesanan")
-    print("  6. Hapus Data Riwayat (Pesanan/Pembayaran)")
     print("  0. Kembali ke Menu Utama")
     cetak_garis(56)
 
@@ -641,7 +515,7 @@ def menu_riwayat(daftar_pelanggan=None, daftar_layanan=None, daftar_pesanan=None
 
     while True:
         tampilkan_header_menu()
-        pilihan = input_pilihan_menu("Pilih menu (0-6): ", PILIHAN_MENU_RIWAYAT)
+        pilihan = input_pilihan_menu("Pilih menu (0-4): ", PILIHAN_MENU_RIWAYAT)
 
         if pilihan == "1":
             tampilkan_riwayat_pesanan(daftar_pesanan, riwayat_pembayaran, daftar_pelanggan)
@@ -651,10 +525,6 @@ def menu_riwayat(daftar_pelanggan=None, daftar_layanan=None, daftar_pesanan=None
             tampilkan_riwayat_pembayaran(riwayat_pembayaran)
         elif pilihan == "4":
             tampilkan_total_pendapatan(riwayat_pembayaran, daftar_pesanan)
-        elif pilihan == "5":
-            ubah_status_riwayat_pesanan(daftar_pesanan)
-        elif pilihan == "6":
-            hapus_riwayat_transaksi(riwayat_pembayaran, daftar_pesanan)
         elif pilihan == "0":
             print("\n[INFO] Kembali ke menu utama...")
             break
