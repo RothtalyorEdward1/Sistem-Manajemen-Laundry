@@ -192,7 +192,7 @@ def tambah_pesanan(data):
     pelanggan_data = baca_pelanggan()
 
     if len(pelanggan_data) == 0:
-        print("Belum ada pelanggan. Tambahkan pelanggan dahulu.")
+        print("Belum ada pelanggan. Tambahkan pelanggan terlebihdahulu.")
         return
     else:
         kode = input_teks("Masukkan kode pelanggan: ").upper() #upper mengubah huruf menjadi kapital
@@ -407,7 +407,7 @@ def hapus_pesanan(data):
 
     tampilkan_daftar_pesanan(data)
 
-    kode = input_teks("Masukkan kode pesanan yang dihapus: ").upper()
+    kode = input_teks("Masukkan kode pesanan yang dihapus: ").upper() #upper untuk mwngubah kode menjadi huruf kapital
     pesanan = cari_pesanan(data, kode)
 
     if pesanan is None:
@@ -418,7 +418,7 @@ def hapus_pesanan(data):
     print("Pelanggan   :", pesanan["nama_pelanggan"])
     print("Status      :", pesanan["status"])
 
-    yakin = input("\nYakin ingin menghapus pesanan? (y/t): ").strip().lower()
+    yakin = input("\nYakin ingin menghapus pesanan? (y/t): ").strip().lower() 
 
     if yakin == "y" or yakin == "ya":
         indeks = data.index(pesanan)
