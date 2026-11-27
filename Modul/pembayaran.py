@@ -223,7 +223,7 @@ def menu_pembayaran(
 
         if pilihan == "1":
             proses_pembayaran(
-                daftar_pelanggan, daftar_layanan, daftar_pesanan, riwayat_pembayaran
+                daftar_pelanggan, daftar_pesanan, riwayat_pembayaran
             )
         elif pilihan == "2":
             lihat_bukti_transaksi(riwayat_pembayaran)
