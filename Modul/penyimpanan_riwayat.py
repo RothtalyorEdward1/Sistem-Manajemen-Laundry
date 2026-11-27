@@ -2,12 +2,8 @@ import json
 import os
 from datetime import datetime
 
-
-# 1. KONFIGURASI DIREKTORI & NAMA FILE PENYIMPANAN
-
 DIREKTORI_MODUL = os.path.dirname(os.path.abspath(__file__))
 
-# Note: Seluruh file database JSON tersimpan terpusat di dalam folder 'Modul'
 FILE_PELANGGAN = os.path.join(DIREKTORI_MODUL, "data_pelanggan.json")
 FILE_LAYANAN = os.path.join(DIREKTORI_MODUL, "layanan.json")
 FILE_PESANAN = os.path.join(DIREKTORI_MODUL, "pesanan.json")
@@ -15,54 +11,40 @@ FILE_PEMBAYARAN = os.path.join(DIREKTORI_MODUL, "riwayat_pembayaran.json")
 FILE_EKSPOR_LAPORAN = os.path.join(DIREKTORI_MODUL, "laporan_pendapatan.txt")
 
 
-# 2. Penerapan Struktur Data Tuple
-
 PILIHAN_MENU_RIWAYAT = ("1", "2", "3", "4", "0")
 STATUS_PESANAN_TUPLE = ("Diterima", "Diproses", "Selesai", "Diambil")
 STATUS_BAYAR_TUPLE = ("Belum Lunas", "Lunas")
 LEBAR_GARIS = 75
 
-# validasi integritas struktur data dictionary
 KUNCI_WAJIB_PEMBAYARAN = {"id_pembayaran", "no_transaksi", "total_tagihan"}
 KUNCI_WAJIB_PESANAN = {"berat_kg", "total"}
 
 
-# 3. FUNGSI PEMBANTU
-
 def format_rupiah(angka):
-    """Mengubah angka (int/float) menjadi string berformat rupiah (contoh: Rp 25.000)."""
     try:
         nilai = int(round(float(angka)))
         return "Rp " + f"{nilai:,}".replace(",", ".")
     except (ValueError, TypeError):
         return "Rp 0"
 
-
 def cetak_garis(panjang=LEBAR_GARIS, karakter="="):
-    """Mencetak garis pemisah."""
     print(karakter * panjang)
 
-
 def input_teks_valid(pesan, boleh_kosong=False):
-    """Meminta input teks dengan validasi tidak boleh kosong."""
     while True:
         teks = input(pesan).strip()
         if teks or boleh_kosong:
             return teks
         print("[PERINGATAN] Input tidak boleh kosong! Silakan coba lagi.")
 
-
 def input_pilihan_menu(pesan, opsi_valid):
-    """Validasi input menu berdasarkan koleksi opsi (Tuple/Set)."""
     while True:
         pilihan = input(pesan).strip()
         if pilihan in opsi_valid:
             return pilihan
         print(f"[PERINGATAN] Pilihan tidak valid! Masukkan salah satu dari {list(opsi_valid)}.")
 
-
 def konfirmasi_tindakan(pesan):
-    """Menanyakan konfirmasi persetujuan (y/n)."""
     jawaban_ya = {"y", "ya", "yes"}
     jawaban_tidak = {"t", "tidak", "n", "no"}
     while True:
@@ -73,11 +55,7 @@ def konfirmasi_tindakan(pesan):
             return False
         print("[PERINGATAN] Jawab dengan 'y' (ya) atau 'n' (tidak)!")
 
-
-# 4. PENYIMPANAN DATA 
-
 def _baca_file_json(path_file, tipe_data_kosong=list):
-    """Fungsi umum untuk membaca file JSON dengan proteksi Exception Handling."""
     if not os.path.exists(path_file):
         return tipe_data_kosong()
     try:
@@ -93,11 +71,8 @@ def _baca_file_json(path_file, tipe_data_kosong=list):
         print(f"[ERROR] Gagal membaca file '{os.path.basename(path_file)}': {err}")
         return tipe_data_kosong()
 
-
 def _tulis_file_json(path_file, data):
-    """Fungsi umum untuk menulis ke file JSON dengan proteksi Exception Handling."""
     try:
-        # memastikan direktori tujuan tersedia
         folder_tujuan = os.path.dirname(path_file)
         if folder_tujuan and not os.path.exists(folder_tujuan):
             os.makedirs(folder_tujuan, exist_ok=True)
@@ -110,33 +85,23 @@ def _tulis_file_json(path_file, data):
         return False
 
 
-# Fungsi menyimpan Spesifik Setiap Entitas 
 def simpan_data_pelanggan(daftar_pelanggan):
-    """Menyimpan list data pelanggan ke file JSON."""
     sukses = _tulis_file_json(FILE_PELANGGAN, daftar_pelanggan)
     return sukses
 
-
 def simpan_data_layanan(daftar_layanan):
-    """Menyimpan list data layanan ke file JSON."""
     sukses = _tulis_file_json(FILE_LAYANAN, daftar_layanan)
     return sukses
 
-
 def simpan_data_pesanan(daftar_pesanan):
-    """Menyimpan list data pesanan ke file JSON."""
     sukses = _tulis_file_json(FILE_PESANAN, daftar_pesanan)
     return sukses
 
-
 def simpan_riwayat_pembayaran(riwayat_pembayaran):
-    """Menyimpan list riwayat transaksi pembayaran ke file JSON."""
     sukses = _tulis_file_json(FILE_PEMBAYARAN, riwayat_pembayaran)
     return sukses
 
-
 def simpan_semua_data(daftar_pelanggan, daftar_layanan, daftar_pesanan, riwayat_pembayaran):
-    """Menyimpan seluruh data aplikasi ke file masing-masing sekaligus."""
     s1 = simpan_data_pelanggan(daftar_pelanggan)
     s2 = simpan_data_layanan(daftar_layanan)
     s3 = simpan_data_pesanan(daftar_pesanan)
@@ -144,38 +109,23 @@ def simpan_semua_data(daftar_pelanggan, daftar_layanan, daftar_pesanan, riwayat_
     return all((s1, s2, s3, s4))
 
 
-# Fungsi Memuat Spesifik Setiap Entitas
 def muat_data_pelanggan():
-    """Membaca data pelanggan dari file JSON."""
     data = _baca_file_json(FILE_PELANGGAN, list)
     return data if isinstance(data, list) else []
 
-
 def muat_data_layanan():
-    """Membaca data layanan dari file JSON."""
     data = _baca_file_json(FILE_LAYANAN, list)
     return data if isinstance(data, list) else []
 
-
 def muat_data_pesanan():
-    """Membaca data pesanan dari file JSON."""
     data = _baca_file_json(FILE_PESANAN, list)
     return data if isinstance(data, list) else []
 
-
 def muat_riwayat_pembayaran():
-    """Membaca data riwayat pembayaran dari file JSON."""
     data = _baca_file_json(FILE_PEMBAYARAN, list)
     return data if isinstance(data, list) else []
 
-# Penting utama
-
 def muat_semua_data():
-    """
-    Fitur Utama: Membaca kembali seluruh data ketika aplikasi dijalankan.
-    Mengembalikan dictionary berisi 4 data utama:
-    {'pelanggan': [...], 'layanan': [...], 'pesanan': [...], 'pembayaran': [...]}
-    """
     pelanggan = muat_data_pelanggan()
     layanan = muat_data_layanan()
     pesanan = muat_data_pesanan()
@@ -187,23 +137,16 @@ def muat_semua_data():
         "pembayaran": pembayaran,
     }
 
-
-# kemudahan integrasi dengan modul teman
 baca_data_pelanggan = muat_data_pelanggan
 baca_data_layanan = muat_data_layanan
 baca_data_pesanan = muat_data_pesanan
 baca_riwayat_pembayaran = muat_riwayat_pembayaran
 
 
-# FITUR RIWAYAT PESANAN 
-
 def _ambil_kode_pesanan(pesanan_dict):
-    """Mengekstrak nomor kode/transaksi pesanan (fleksibel kode atau no_transaksi)."""
     return pesanan_dict.get("kode") or pesanan_dict.get("no_transaksi") or "-"
 
-
 def _ambil_nama_pelanggan(pesanan_dict, daftar_pelanggan=None):
-    """Mengekstrak nama pelanggan dari pesanan atau relasi id_pelanggan."""
     if "pelanggan" in pesanan_dict and pesanan_dict["pelanggan"]:
         return str(pesanan_dict["pelanggan"])
     if "nama_pelanggan" in pesanan_dict and pesanan_dict["nama_pelanggan"]:
@@ -216,18 +159,13 @@ def _ambil_nama_pelanggan(pesanan_dict, daftar_pelanggan=None):
                 return p.get("nama") or p.get("nama_pelanggan") or id_plg
     return id_plg if id_plg else "Umum"
 
-
-def _ambil_status_bayar(pesanan_dict, riwayat_pembayaran=None):
-    """Mengecek status pembayaran pesanan (Lunas / Belum Lunas)."""
-    # 1. Cek langsung 
+def _ambil_status_bayar(pesanan_dict, riwayat_pembayaran=None): 
     status = pesanan_dict.get("status_bayar", "")
     if isinstance(status, str) and status.lower() == "lunas":
         return "Lunas"
-
-    # 2. cross-check terhadap riwayat pembayaran 
+ 
     if riwayat_pembayaran:
         kode = _ambil_kode_pesanan(pesanan_dict).upper()
-        # pencarian cepat
         set_trx_lunas = {
             bayar.get("no_transaksi", "").upper()
             for bayar in riwayat_pembayaran
@@ -239,12 +177,7 @@ def _ambil_status_bayar(pesanan_dict, riwayat_pembayaran=None):
     return "Belum Lunas"
 
 
-# fitur sub menu 1
-
 def tampilkan_riwayat_pesanan(daftar_pesanan, riwayat_pembayaran=None, daftar_pelanggan=None):
-    """
-    Fitur 5.1: Menampilkan seluruh riwayat pesanan pelanggan dalam bentuk tabel terminal.
-    """
     print()
     cetak_garis(85)
     print("                    RIWAYAT SELURUH PESANAN LAUNDRY")
@@ -255,7 +188,6 @@ def tampilkan_riwayat_pesanan(daftar_pesanan, riwayat_pembayaran=None, daftar_pe
         cetak_garis(85)
         return
 
-    # Tabel
     print(
         f"{'No':<4} {'Kode':<8} {'Pelanggan':<16} {'Layanan':<15} "
         f"{'Berat':<8} {'Total Biaya':<14} {'Status':<10} {'Bayar':<10}"
@@ -281,19 +213,11 @@ def tampilkan_riwayat_pesanan(daftar_pesanan, riwayat_pembayaran=None, daftar_pe
     cetak_garis(85)
 
 
-# fitur sub menu 2
-
 def cari_riwayat_pelanggan(daftar_pesanan, riwayat_pembayaran=None, daftar_pelanggan=None):
-    """
-    Fitur 5.1 lanjutan: Menampilkan riwayat pesanan khusus untuk pelanggan tertentu.
-    Menerapkan pencarian berdasarkan nama, ID pelanggan, atau nomor telepon.
-    """
     print("\n--- CARI RIWAYAT PESANAN PELANGGAN ---")
     if not daftar_pesanan:
         print("[INFO] Belum ada riwayat pesanan untuk dicari.")
         return
-
-    # Menampilkan daftar nama pelanggan 
 
     pelanggan_unik = set()
     for p in daftar_pesanan:
@@ -322,12 +246,7 @@ def cari_riwayat_pelanggan(daftar_pesanan, riwayat_pembayaran=None, daftar_pelan
     tampilkan_riwayat_pesanan(hasil_filter, riwayat_pembayaran, daftar_pelanggan)
 
 
-# sub menu 3
-
 def tampilkan_riwayat_pembayaran(riwayat_pembayaran):
-    """
-    Fitur 5.4: Menampilkan riwayat transaksi pembayaran kasir yang sudah lunas.
-    """
     print()
     cetak_garis(92)
     print("                        RIWAYAT PEMBAYARAN KASIR")
@@ -368,16 +287,11 @@ def tampilkan_riwayat_pembayaran(riwayat_pembayaran):
 
 
 def hitung_statistik_pendapatan(riwayat_pembayaran, daftar_pesanan=None):
-    """
-    Menghitung statistik pendapatan laundry secara komprehensif.
-    Mengembalikan Dictionary berisi rincian finansial.
-    """
     total_biaya_kotor = 0.0
     total_diskon = 0.0
     total_pendapatan_bersih = 0.0
     jumlah_transaksi = len(riwayat_pembayaran)
 
-    # Dictionary agregasi pendapatan per jenis layanan
     pendapatan_per_layanan = {}
 
     if riwayat_pembayaran:
@@ -391,13 +305,11 @@ def hitung_statistik_pendapatan(riwayat_pembayaran, daftar_pesanan=None):
             total_diskon += diskon
             total_pendapatan_bersih += tagihan
 
-            # Menggabungkan setiap layanan
             if layanan not in pendapatan_per_layanan:
                 pendapatan_per_layanan[layanan] = {"frekuensi": 0, "total": 0.0}
             pendapatan_per_layanan[layanan]["frekuensi"] += 1
             pendapatan_per_layanan[layanan]["total"] += tagihan
 
-    # jika riwayat_pembayaran kosong tapi daftar_pesanan ada yang lunas
     elif daftar_pesanan:
         for p in daftar_pesanan:
             status_bayar = str(p.get("status_bayar", "")).lower()
@@ -426,14 +338,9 @@ def hitung_statistik_pendapatan(riwayat_pembayaran, daftar_pesanan=None):
         "per_layanan": pendapatan_per_layanan,
     }
 
-#submenu 4
 
 def tampilkan_total_pendapatan(riwayat_pembayaran, daftar_pesanan=None):
-    """
-    Fitur 5.2: Menampilkan total pendapatan laundry beserta rincian dan analisisnya.
-    """
     stats = hitung_statistik_pendapatan(riwayat_pembayaran, daftar_pesanan)
-
     print()
     cetak_garis(60)
     print("            LAPORAN TOTAL PENDAPATAN LAUNDRY")
@@ -455,15 +362,12 @@ def tampilkan_total_pendapatan(riwayat_pembayaran, daftar_pesanan=None):
 
     cetak_garis(60)
 
-    # opsi ekspor ke file teks (.txt)
-
     if stats["jumlah_transaksi"] > 0:
         if konfirmasi_tindakan("Apakah Anda ingin mengekspor laporan pendapatan ke file .txt?"):
             ekspor_laporan_pendapatan(stats)
 
 
 def ekspor_laporan_pendapatan(stats):
-    """Mengekspor ringkasan pendapatan ke file teks laporan_pendapatan.txt (Penerapan I/O .txt)."""
     try:
         waktu_sekarang = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         with open(FILE_EKSPOR_LAPORAN, "w", encoding="utf-8") as berkas:
@@ -485,10 +389,7 @@ def ekspor_laporan_pendapatan(stats):
         print(f"[ERROR] Gagal mengekspor laporan: {err}")
 
 
-# SUBMENU 
-
 def tampilkan_header_menu():
-    """Menampilkan antarmuka judul menu submenu riwayat."""
     print()
     cetak_garis(56)
     print("       FITUR 5: RIWAYAT DAN PENYIMPANAN DATA")
@@ -501,12 +402,7 @@ def tampilkan_header_menu():
     cetak_garis(56)
 
 
-def menu_riwayat(daftar_pelanggan=None, daftar_layanan=None, daftar_pesanan=None, riwayat_pembayaran=None):
-    """
-    Submenu utama Fitur 5: Riwayat dan Penyimpanan Data.
-    Dapat menerima data dari main.py atau memuat secara mandiri dari file JSON.
-    """
-    # Membaca kembali data 
+def menu_riwayat(daftar_pelanggan=None, daftar_layanan=None, daftar_pesanan=None, riwayat_pembayaran=None): 
     if daftar_pelanggan is None:
         daftar_pelanggan = muat_data_pelanggan()
     if daftar_layanan is None:
@@ -519,7 +415,6 @@ def menu_riwayat(daftar_pelanggan=None, daftar_layanan=None, daftar_pesanan=None
     while True:
         tampilkan_header_menu()
         pilihan = input_pilihan_menu("Pilih menu (0-4): ", PILIHAN_MENU_RIWAYAT)
-
         if pilihan == "1":
             tampilkan_riwayat_pesanan(daftar_pesanan, riwayat_pembayaran, daftar_pelanggan)
         elif pilihan == "2":
@@ -533,8 +428,6 @@ def menu_riwayat(daftar_pelanggan=None, daftar_layanan=None, daftar_pesanan=None
             break
 
 
-# EKSEKUSI MANDIRI 
-
 if __name__ == "__main__":
     try:
         print("\n[MEMUAT DATA SISTEM LAUNDRY DARI PENYIMPANAN FILE JSON...]")
@@ -545,7 +438,6 @@ if __name__ == "__main__":
             f"{len(data_sistem['pesanan'])} Pesanan, "
             f"{len(data_sistem['pembayaran'])} Riwayat Pembayaran."
         )
-
         menu_riwayat(
             daftar_pelanggan=data_sistem["pelanggan"],
             daftar_layanan=data_sistem["layanan"],
