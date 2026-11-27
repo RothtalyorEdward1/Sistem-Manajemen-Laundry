@@ -2,12 +2,10 @@
 import json
 import os
 
-# ---------- PENGATURAN FILE ----------
 FOLDER_MODUL = os.path.dirname(os.path.abspath(__file__))
 NAMA_FILE = os.path.join(FOLDER_MODUL, "data_pelanggan.json")
 
 
-# ---------- SIMPAN DAN BACA FILE ----------
 def baca_data():
     if not os.path.exists(NAMA_FILE):
         return []
@@ -30,7 +28,6 @@ def simpan_data(data):
         print("Data gagal disimpan.")
 
 
-# ---------- CEK INPUT ----------
 def minta_nama(teks, boleh_kosong=False):
     huruf_boleh = "abcdefghijklmnopqrstuvwxyz "
 
@@ -77,16 +74,13 @@ def minta_alamat(teks, boleh_kosong=False):
             return alamat
 
 
-# ---------- FUNGSI BANTU ----------
 def buat_id(data):
-    # ID dibuat otomatis: P001, P002, dst. Tidak akan sama.
     id_terpakai = set()
     for p in data:
         id_terpakai.add(p["id"])
 
     nomor = 1
     while True:
-        # Tambahkan angka 0 di depan supaya ID rapi
         if nomor < 10:
             id_baru = "P00" + str(nomor)
         elif nomor < 100:
@@ -94,7 +88,7 @@ def buat_id(data):
         else:
             id_baru = "P" + str(nomor)
 
-        # Kalau ID belum dipakai, langsung gunakan
+
         if id_baru not in id_terpakai:
             return id_baru
 
@@ -108,7 +102,6 @@ def cari_pelanggan(data, id_cari):
     return None
 
 
-# ---------- FITUR 1: TAMPILKAN ----------
 def tampilkan(data):
     print("\n=== DAFTAR PELANGGAN ===")
     if len(data) == 0:
@@ -119,7 +112,6 @@ def tampilkan(data):
     print("Total:", len(data), "pelanggan")
 
 
-# ---------- FITUR 2: TAMBAH ----------
 def tambah(data):
     print("\n=== TAMBAH PELANGGAN ===")
     nama = minta_nama("Nama     : ")
@@ -137,7 +129,6 @@ def tambah(data):
     print("Berhasil! ID pelanggan:", pelanggan["id"])
 
 
-# ---------- FITUR 3: UBAH ----------
 def ubah(data):
     print("\n=== UBAH PELANGGAN ===")
     if len(data) == 0:
@@ -168,7 +159,6 @@ def ubah(data):
     print("Data berhasil diubah.")
 
 
-# ---------- FITUR 4: HAPUS ----------
 def hapus(data):
     print("\n=== HAPUS PELANGGAN ===")
     if len(data) == 0:
@@ -192,7 +182,6 @@ def hapus(data):
         print("Batal menghapus.")
 
 
-# ---------- MENU ----------
 def menu_pelanggan():
     data = baca_data()
     pilihan_menu = ("0", "1", "2", "3", "4")
