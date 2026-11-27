@@ -107,7 +107,7 @@ def muat_data():
         simpan_data(data)
         return data
 
-    except ValueError:  # termasuk json.JSONDecodeError
+    except ValueError:  
         print("File data rusak. File lama disimpan sebagai layanan.json.rusak.")
         try:
             os.replace(FILE_LAYANAN, FILE_LAYANAN + ".rusak")
@@ -133,16 +133,15 @@ def format_rupiah(angka):
     return "Rp " + f"{angka:,}".replace(",", ".")
 
 
+# Minta nomor layanan. Mengembalikan indeks list, atau None kalau batal.
 def pilih_nomor_layanan(data, pesan):
-    """Minta nomor layanan. Mengembalikan indeks list, atau None kalau batal."""
     nomor = input_angka(pesan + " (0 = batal): ", 0, len(data))
     if nomor == 0:
         return None
     return nomor - 1
 
-
+# tampilan layar dalam bentuk tabel
 def tampilkan_daftar(data):
-    """Tampilkan semua layanan dalam bentuk tabel."""
     print()
     cetak_garis()
     print("DAFTAR LAYANAN LAUNDRY")
@@ -202,7 +201,7 @@ def ubah_layanan(data):
     layanan = data[indeks]
     print("Tekan Enter jika tidak ingin mengubah bagian tersebut.")
 
-    # --- nama ---
+    # nama 
     nama_baru = input_teks(f"Nama baru [{layanan['nama']}]: ", boleh_kosong=True)
     if nama_baru != "":
         nama_lain = {
@@ -213,14 +212,14 @@ def ubah_layanan(data):
             return
         layanan["nama"] = nama_baru
 
-    # --- harga ---
+    #  harga 
     harga_baru = input_angka(
         f"Harga baru [{layanan['harga']}]: ", minimal=1, boleh_kosong=True
     )
     if harga_baru is not None:
         layanan["harga"] = harga_baru
 
-    # --- estimasi ---
+    #  estimasi 
     estimasi_baru = input_angka(
         f"Estimasi baru (jam) [{layanan['estimasi_jam']}]: ",
         minimal=1,
@@ -272,7 +271,7 @@ def tampilkan_menu():
 # PROGRAM UTAMA
 
 def main():
-    data = muat_data()  # data dibaca dari file saat program mulai
+    data = muat_data()  # data dibaca dari file ketika program mulai
 
     while True:
         tampilkan_menu()
