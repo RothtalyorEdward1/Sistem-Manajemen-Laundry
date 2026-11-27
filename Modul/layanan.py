@@ -26,19 +26,19 @@ JAWABAN_TIDAK = {"t", "tidak", "n"}
 
 # VALIDASI INPUT
 
-def input_teks(pesan, kosong=False):
+def input_teks(pesan, boleh_kosong=False):
     while True:
         teks = input(pesan).strip()
-        if teks != "" or kosong:
+        if teks != "" or boleh_kosong:
             return teks
         print("Input tidak boleh kosong, coba lagi.")
 
 
-def input_angka(pesan, minimal=0, maksimal=None, kosong=False):
+def input_angka(pesan, minimal=0, maksimal=None, boleh_kosong=False):
     while True:
         teks = input(pesan).strip()
 
-        if teks == "" and kosong:
+        if teks == "" and boleh_kosong:
             return None
 
         try:
