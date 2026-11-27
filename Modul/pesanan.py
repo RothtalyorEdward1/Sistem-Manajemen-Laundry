@@ -1,12 +1,9 @@
 
 
-import json #Memanggil library json yang sudah tersedia di Python. Digunakan untuk membaca dan menyimpan data dalam format JSON.
-import os #Memanggil library json yang sudah tersedia di Python. Digunakan untuk membaca dan menyimpan data dalam format JSON.
-import layanan #Memanggil file Python bernama layanan.py. Memungkinkan program pesanan.py menggunakan fungsi yang sudah dibuat di dalam layanan.py.
+import json 
+import os 
+import layanan 
 
-# ==========================================
-# PENGATURAN DATA
-# ==========================================
 
 FOLDER_PROGRAM = os.path.dirname(os.path.abspath(__file__)) #Menentukan lokasi folder tempat file pesanan.py berada.
 FILE_PESANAN = os.path.join(FOLDER_PROGRAM, "pesanan.json") # Menentukan alamat lengkap file untuk menyimpan data pesanan. os.path.join() digunakan untuk menggabungkan lokasi folder dengan nama file.
@@ -15,19 +12,16 @@ FILE_PELANGGAN = os.path.join(FOLDER_PROGRAM, "data_pelanggan.json") #Menentukan
 STATUS_PESANAN = ("Diterima", "Diproses", "Selesai", "Diambil") #Menyediakan daftar status yang dapat digunakan dalam pengelolaan pesanan.
 
 
-# ==========================================
-# MEMBACA DAN MENYIMPAN DATA
-# ==========================================
 
 def baca_pesanan():
-    if not os.path.exists(FILE_PESANAN): #Memeriksa apakah file pesanan.json sudah tersedia. Penjelasan: os.path.exists() memeriksa keberadaan file. not membalik hasil pemeriksaan. if menjalankan perintah jika kondisi benar.
+    if not os.path.exists(FILE_PESANAN): 
         return []
 
     try:
         with open(FILE_PESANAN, "r") as file:
-            data = json.load(file) #Mengambil isi file JSON dan mengubahnya menjadi tipe data Python.
+            data = json.load(file) 
 
-        if isinstance(data, list): #Memeriksa apakah data yang dibaca benar-benar berbentuk list. isinstance() merupakan fungsi bawaan Python untuk memeriksa tipe data suatu objek.
+        if isinstance(data, list): 
             return data
         else:
             print("Format data pesanan tidak sesuai.")
@@ -41,7 +35,7 @@ def baca_pesanan():
 def simpan_pesanan(data):
     try:
         with open(FILE_PESANAN, "w") as file:
-            json.dump(data, file, indent=4)  #json.dump Karena data yang digunakan dalam Python berbentuk list dan dictionary, sedangkan file penyimpanannya berbentuk JSON
+            json.dump(data, file, indent=4)  
         return True
 
     except OSError as error:
@@ -52,7 +46,7 @@ def simpan_pesanan(data):
 def baca_pelanggan():
     try:
         with open(FILE_PELANGGAN, "r") as file:
-            data = json.load(file) #mengambil isi file JSON.
+            data = json.load(file) 
 
         if isinstance(data, list):
             return data
@@ -64,9 +58,6 @@ def baca_pelanggan():
         return []
 
 
-# ==========================================
-# VALIDASI INPUT
-# ==========================================
 
 def input_teks(pesan):
     while True:
@@ -95,7 +86,7 @@ def input_angka(pesan, minimal=0):
 def input_berat(pesan):
     while True:
         try:
-            berat = float(input(pesan).replace(",", ".")) #replace(",", ".") Mengganti tanda koma menjadi titik.
+            berat = float(input(pesan).replace(",", ".")) 
 
             if berat > 0:
                 return berat
@@ -107,18 +98,15 @@ def input_berat(pesan):
 
 
 def format_rupiah(angka):
-    return "Rp " + f"{angka:,.0f}".replace(",", ".") #angka: Nilai yang ingin ditampilkan. ,: Memberikan pemisah ribuan. .0f: Menampilkan angka tanpa angka desimal.
+    return "Rp " + f"{angka:,.0f}".replace(",", ".") 
 
 
-# ==========================================
-# MEMBUAT KODE PESANAN
-# ==========================================
 
 def buat_id_pesanan(data):
-    id_terpakai = set() #Set merupakan tipe data Python yang digunakan untuk menyimpan kumpulan nilai unik atau tidak memiliki duplikasi. Mengapa menggunakan set? Karena program ingin mengumpulkan seluruh kode pesanan yang sudah digunakan.
+    id_terpakai = set() 
 
     for pesanan in data:
-        id_terpakai.add(pesanan["id"]) #Menambahkan kode pesanan yang sudah ada ke dalam set id_terpakai.
+        id_terpakai.add(pesanan["id"]) 
 
     nomor = 1
 
@@ -131,9 +119,6 @@ def buat_id_pesanan(data):
             nomor += 1
 
 
-# ==========================================
-# MENCARI DATA
-# ==========================================
 
 def cari_pelanggan(data, kode):
     for pelanggan in data:
@@ -151,9 +136,6 @@ def cari_pesanan(data, kode):
     return None
 
 
-# ==========================================
-# MENAMPILKAN DAFTAR PESANAN
-# ==========================================
 
 def tampilkan_daftar_pesanan(data):
     print("\n" + "=" * 60)
@@ -179,23 +161,19 @@ def tampilkan_daftar_pesanan(data):
         print("Total pesanan:", len(data))
 
 
-# ==========================================
-# MENAMBAH PESANAN
-# ==========================================
 
 def tambah_pesanan(data):
     print("\n" + "=" * 40)
     print("TAMBAH PESANAN LAUNDRY")
     print("=" * 40)
 
-    # Memilih pelanggan
     pelanggan_data = baca_pelanggan()
 
     if len(pelanggan_data) == 0:
         print("Belum ada pelanggan. Tambahkan pelanggan terlebihdahulu.")
         return
     else:
-        kode = input_teks("Masukkan kode pelanggan: ").upper() #upper mengubah huruf menjadi kapital
+        kode = input_teks("Masukkan kode pelanggan: ").upper()
         pelanggan = cari_pelanggan(pelanggan_data, kode)
 
     if pelanggan is None:
@@ -208,8 +186,7 @@ def tambah_pesanan(data):
         print("Telepon :", pelanggan["telepon"])
         print("Alamat  :", pelanggan["alamat"])
 
-    # Mengambil daftar layanan
-    daftar_layanan = layanan.muat_data() #Fungsi ini mengambil data layanan dari file layanan.py. arena pengelolaan layanan sudah dibuat secara terpisah. Dengan begitu, program pesanan dapat menggunakan data layanan yang sudah tersedia.
+    daftar_layanan = layanan.muat_data() 
 
     if len(daftar_layanan) == 0:
         print("Belum tersedia layanan laundry.")
@@ -217,7 +194,7 @@ def tambah_pesanan(data):
     else:
         daftar_barang = []
 
-    # Memilih layanan
+    
     while True:
         layanan.tampilkan_daftar(daftar_layanan)
 
@@ -233,7 +210,7 @@ def tambah_pesanan(data):
                 continue
 
         elif nomor <= len(daftar_layanan):
-            jenis = daftar_layanan[nomor - 1] #Karena nomor layanan dimulai dari 1, sedangkan indeks list dimulai dari 0.
+            jenis = daftar_layanan[nomor - 1] 
             berat = input_berat("Masukkan berat pakaian (kg): ")
 
             subtotal = berat * jenis["harga"]
@@ -252,26 +229,11 @@ def tambah_pesanan(data):
             print("Layanan :", jenis["nama"])
             print("Berat   :", berat, "kg")
             print("Subtotal:", format_rupiah(subtotal))
-
-            while True:
-                tambah_lagi = input("\nTambah jenis layanan lain? (y/t): ").strip().lower() #.strip() menghapus spasi di awal dan akhir input. .lower() mengubah huruf menjadi huruf kecil.
-
-                if tambah_lagi == "t" or tambah_lagi == "tidak" or tambah_lagi == "n":
-                    break
-                elif tambah_lagi == "y" or tambah_lagi == "ya":
-                    break
-                else:
-                    print("Jawaban tidak valid!")
-
-            if tambah_lagi == "t" or tambah_lagi == "tidak" or tambah_lagi == "n":
-                break
-            elif tambah_lagi == "y" or tambah_lagi == "ya":
-                continue
+            break
 
         else:
             print("Nomor layanan tidak tersedia!")
 
-    # Membuat pesanan baru
     pesanan_baru = {
         "id": buat_id_pesanan(data),
         "pelanggan_id": pelanggan["id"],
@@ -291,9 +253,6 @@ def tambah_pesanan(data):
         data.remove(pesanan_baru)
 
 
-# ==========================================
-# MENAMPILKAN STRUK
-# ==========================================
 
 def tampilkan_struk(pesanan):
     print("\n" + "=" * 50)
@@ -321,9 +280,6 @@ def tampilkan_struk(pesanan):
     print("=" * 50)
 
 
-# ==========================================
-# MELIHAT DETAIL PESANAN
-# ==========================================
 
 def detail_pesanan(data):
     print("\n--- DETAIL PESANAN ---")
@@ -332,7 +288,7 @@ def detail_pesanan(data):
         print("Belum ada pesanan.")
         return
     else:
-        kode = input_teks("Masukkan kode pesanan: ").upper() #mengubah kode menjadi huruf kapital. 
+        kode = input_teks("Masukkan kode pesanan: ").upper()  
         pesanan = cari_pesanan(data, kode)
 
     if pesanan is None:
@@ -341,9 +297,6 @@ def detail_pesanan(data):
         tampilkan_struk(pesanan)
 
 
-# ==========================================
-# MENGUBAH STATUS PESANAN
-# ==========================================
 
 
 def ubah_status(data):
@@ -397,9 +350,6 @@ def ubah_status(data):
         print("Gagal mengubah status pesanan.")
 
 
-# ==========================================
-# MENGHAPUS PESANAN
-# ==========================================
 
 def hapus_pesanan(data):
     print("\n--- HAPUS PESANAN ---")
@@ -441,9 +391,6 @@ def hapus_pesanan(data):
 
 
 
-# ==========================================
-# MENU UTAMA PESANAN
-# ==========================================
 
 def tampilkan_menu():
     print("\n" + "=" * 40)
@@ -460,9 +407,6 @@ def tampilkan_menu():
     print("=" * 40)
 
 
-# ==========================================
-# PROGRAM UTAMA
-# ==========================================
 
 def main():
     data = baca_pesanan()

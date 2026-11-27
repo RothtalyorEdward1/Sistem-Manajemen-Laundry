@@ -1,1 +1,19 @@
-[]
+[
+    {
+        "id": "ORD001",
+        "pelanggan_id": "P001",
+        "nama_pelanggan": "Rein",
+        "telepon": "085135596308",
+        "alamat": "kemiri barat",
+        "daftar_layanan": [
+            {
+                "nama_layanan": "Cuci setrika",
+                "berat": 3.0,
+                "harga_per_kg": 8000,
+                "estimasi_jam": 48,
+                "subtotal": 24000.0
+            }
+        ],
+        "status": "Diterima"
+    }
+]

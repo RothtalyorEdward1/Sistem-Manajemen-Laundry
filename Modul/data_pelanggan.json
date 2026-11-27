@@ -2,6 +2,7 @@
     {
         "id": "P001",
         "nama": "Rein",
+<<<<<<< HEAD
         "telepon": "088612443456",
         "alamat": "Nias"
     },
@@ -28,5 +29,9 @@
         "nama": "Dayvin",
         "telepon": "082267328231",
         "alamat": "Solo"
+=======
+        "telepon": "085135596308",
+        "alamat": "kemiri barat"
+>>>>>>> 97af53bd173ac8d13f48fe8fb6be6fd5150042dd
     }
 ]
