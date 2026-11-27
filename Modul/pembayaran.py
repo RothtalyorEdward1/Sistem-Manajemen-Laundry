@@ -4,8 +4,8 @@ from Modul.penyimpanan_riwayat import (
     simpan_riwayat_pembayaran,
 )
 
-DISKON_MEMBER = 0.10      # 10%
-DISKON_NON_MEMBER = 0.0   # 0%
+DISKON_MEMBER = 0.10      
+DISKON_NON_MEMBER = 0.0   
 
 
 def _hitung_ringkasan_layanan(pesanan_dict):
