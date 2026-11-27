@@ -1,9 +1,6 @@
 import json
 import os
 
-
-# PENGATURAN DAN DATA AWAL
-
 FOLDER_PROGRAM = os.path.dirname(__file__)
 FILE_LAYANAN = os.path.join(FOLDER_PROGRAM, "layanan.json")
 LEBAR_GARIS = 52
@@ -14,16 +11,9 @@ LAYANAN_AWAL = (
     ("Cuci Saja", 6000, 24),
     ("Express", 25000, 6),
 )
-
-
 KUNCI_WAJIB = {"nama", "harga", "estimasi_jam"}
-
-
 JAWABAN_YA = {"y", "ya"}
 JAWABAN_TIDAK = {"t", "tidak", "n"}
-
-
-# VALIDASI INPUT
 
 def input_teks(pesan, boleh_kosong=False):
     while True:
@@ -53,7 +43,6 @@ def input_angka(pesan, minimal=0, maksimal=None, boleh_kosong=False):
         else:
             return angka
 
-
 def konfirmasi(pesan):
     while True:
         jawaban = input(pesan + " (y/t): ").replace(" ", "").lower()
@@ -63,16 +52,12 @@ def konfirmasi(pesan):
             return False
         print("Jawab dengan y (ya) atau t (tidak).")
 
-
-# PENYIMPANAN DATA (FILE JSON)
-
 def buat_data_awal():
     data = []
     for nama, harga, estimasi in LAYANAN_AWAL:
         layanan = {"nama": nama, "harga": harga, "estimasi_jam": estimasi}
         data.append(layanan)
     return data
-
 
 def simpan_data(data):
     try:
@@ -82,7 +67,6 @@ def simpan_data(data):
     except OSError as error:
         print(f"Gagal menyimpan data: {error}")
         return False
-
 
 def data_valid(data):
     try:
@@ -120,25 +104,17 @@ def muat_data():
         print(f"Gagal membaca file data: {error}")
         return buat_data_awal()
 
-
-# TAMPILAN
-
 def cetak_garis():
     print("=" * LEBAR_GARIS)
 
-
 def format_rupiah(angka):
-    """Contoh: 8000 -> 'Rp 8.000'"""
     return "Rp " + f"{angka:,}".replace(",", ".")
-
-
 
 def pilih_nomor_layanan(data, pesan):
     nomor = input_angka(pesan + " (0 = batal): ", 0, len(data))
     if nomor == 0:
         return None
     return nomor - 1
-
 
 def tampilkan_daftar(data):
     print()
@@ -162,9 +138,6 @@ def tampilkan_daftar(data):
         nomor = nomor + 1
 
     print("-" * 48)
-
-
-# FITUR: TAMBAH, UBAH, HAPUS LAYANAN
 
 def tambah_layanan(data):
     print("\n--- TAMBAH LAYANAN ---")
@@ -200,7 +173,7 @@ def ubah_layanan(data):
     layanan = data[indeks]
     print("Tekan Enter jika tidak ingin mengubah bagian tersebut.")
 
-    # nama 
+
     nama_baru = input_teks(f"Nama baru [{layanan['nama']}]: ", boleh_kosong=True)
     if nama_baru != "":
         nama_lain = {
@@ -211,14 +184,12 @@ def ubah_layanan(data):
             return
         layanan["nama"] = nama_baru
 
-    #  harga 
     harga_baru = input_angka(
         f"Harga baru [{layanan['harga']}]: ", minimal=1, boleh_kosong=True
     )
     if harga_baru is not None:
         layanan["harga"] = harga_baru
 
-    #  estimasi 
     estimasi_baru = input_angka(
         f"Estimasi baru (jam) [{layanan['estimasi_jam']}]: ",
         minimal=1,
@@ -229,7 +200,6 @@ def ubah_layanan(data):
 
     if simpan_data(data):
         print("Layanan berhasil diubah.")
-
 
 def hapus_layanan(data):
     print("\n--- HAPUS LAYANAN ---")
@@ -251,9 +221,6 @@ def hapus_layanan(data):
     else:
         print("Penghapusan dibatalkan.")
 
-
-# MENU
-
 def tampilkan_menu():
     print()
     cetak_garis()
@@ -265,9 +232,6 @@ def tampilkan_menu():
     print("4. Hapus Layanan")
     print("0. Keluar")
     cetak_garis()
-
-
-# PROGRAM UTAMA
 
 def main():
     data = muat_data()  
@@ -288,7 +252,6 @@ def main():
             break
 
     print("\nTerima kasih, sampai jumpa!")
-
 
 if __name__ == "__main__":
     try:
