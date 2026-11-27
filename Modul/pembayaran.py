@@ -60,7 +60,7 @@ def cetak_bukti_transaksi(data_bayar):
 
 
 def proses_pembayaran(
-    daftar_pelanggan, daftar_layanan, daftar_pesanan, riwayat_pembayaran
+    daftar_pelanggan, daftar_pesanan, riwayat_pembayaran
 ):
     print("\n" + "=" * 72)
     print("                      PROSES PEMBAYARAN LAUNDRY")
@@ -211,7 +211,7 @@ def lihat_bukti_transaksi(riwayat_pembayaran):
 
 
 def menu_pembayaran(
-    daftar_pelanggan, daftar_layanan, daftar_pesanan, riwayat_pembayaran
+    daftar_pelanggan, daftar_pesanan, riwayat_pembayaran
 ):
     while True:
         print("\n=== MENU PEMBAYARAN LAUNDRY ===")
