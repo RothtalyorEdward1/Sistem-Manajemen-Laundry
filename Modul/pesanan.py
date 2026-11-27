@@ -8,7 +8,13 @@ import layanan
 FOLDER_PROGRAM = os.path.dirname(os.path.abspath(__file__)) 
 FILE_PESANAN = os.path.join(FOLDER_PROGRAM, "pesanan.json") 
 FILE_PELANGGAN = os.path.join(FOLDER_PROGRAM, "data_pelanggan.json") 
+<<<<<<< HEAD
 STATUS_PESANAN = ("Diterima", "Diproses", "Selesai", "Diambil") 
+=======
+
+STATUS_PESANAN = ("Diterima", "Diproses", "Selesai", "Diambil") 
+
+>>>>>>> fb068bf8e3f95337c377557ada6fda44ddfaa138
 
 
 def baca_pesanan():
