@@ -2,13 +2,45 @@
     {
         "id": "P001",
         "nama": "Rein",
+<<<<<<< HEAD
+        "telepon": "088612443456",
+        "alamat": "Nias"
+    },
+    {
+        "id": "P002",
+        "nama": "Lizh",
+        "telepon": "086215596732",
+        "alamat": "Salatiga"
+    },
+    {
+        "id": "P003",
+        "nama": "Rissa",
+        "telepon": "089925457899",
+        "alamat": "Ungaran"
+    },
+    {
+        "id": "P004",
+        "nama": "Edward",
+        "telepon": "082345513830",
+        "alamat": "Semarang"
+    },
+    {
+        "id": "P005",
+        "nama": "Dayvin",
+        "telepon": "082267328231",
+        "alamat": "Solo"
+=======
         "telepon": "085135596308",
         "alamat": "kemiri barat"
+<<<<<<< HEAD
     },
     {
         "id": "P002",
         "nama": "Tes",
         "telepon": "12345678901",
         "alamat": "tes"
+=======
+>>>>>>> 97af53bd173ac8d13f48fe8fb6be6fd5150042dd
+>>>>>>> c3bd76a425c322f564a63f8eb5957e895b894500
     }
 ]
