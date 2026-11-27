@@ -87,7 +87,6 @@ def main():
 
             Modul.pembayaran.menu_pembayaran(
                 daftar_pelanggan=data_sistem["pelanggan"],
-                daftar_layanan=data_sistem["layanan"],
                 daftar_pesanan=data_sistem["pesanan"],
                 riwayat_pembayaran=data_sistem["pembayaran"],
             )
