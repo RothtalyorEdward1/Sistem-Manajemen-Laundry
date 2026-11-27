@@ -9,7 +9,6 @@ DISKON_NON_MEMBER = 0.0   # 0%
 
 
 def _hitung_ringkasan_layanan(pesanan_dict):
-    """Mengambil ringkasan nama layanan, total berat, dan total biaya awal dari daftar_layanan."""
     daftar = pesanan_dict.get("daftar_layanan", [])
     if daftar and isinstance(daftar, list):
         nama_list = [item.get("nama_layanan", "-") for item in daftar]
@@ -27,7 +26,6 @@ def _hitung_ringkasan_layanan(pesanan_dict):
 
 
 def _cek_member(data_plg):
-    """Mengecek status member pelanggan secara fleksibel."""
     if not data_plg:
         return None
     for key in ("is_member", "member", "status_member"):
@@ -133,7 +131,6 @@ def proses_pembayaran(
     nama_plg = pesanan_terpilih.get("nama_pelanggan") or data_plg.get("nama", "Pelanggan Umum")
     nama_lyn, berat_kg, biaya_awal = _hitung_ringkasan_layanan(pesanan_terpilih)
 
-    # Cek status member dari data_pelanggan.json; jika belum ada key member, tanyakan
     status_member = _cek_member(data_plg)
     if status_member is None:
         while True:
