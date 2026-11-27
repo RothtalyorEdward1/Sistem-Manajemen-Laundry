@@ -1,7 +1,6 @@
 import os
 import sys
 
-# Menambahkan direktori 'Modul' ke sys.path agar impor modul berjalan lancar
 file_path_bersih = __file__.strip("\"' ")
 DIREKTORI_UTAMA = os.path.dirname(os.path.abspath(file_path_bersih))
 DIREKTORI_MODUL = os.path.join(DIREKTORI_UTAMA, "Modul")
@@ -11,7 +10,6 @@ if os.path.exists(DIREKTORI_MODUL) and DIREKTORI_MODUL not in sys.path:
 if DIREKTORI_UTAMA not in sys.path:
     sys.path.insert(0, DIREKTORI_UTAMA)
 
-# Impor Modul Aplikasi
 try:
     import Modul.penyimpanan_riwayat
     import Modul.pelanggan
@@ -25,16 +23,12 @@ except ImportError as e:
     traceback.print_exc()
     sys.exit(1)
 
-
 def cetak_banner():
-    """Menampilkan banner selamat datang di terminal."""
     print("=" * 65)
     print("      SELAMAT DATANG DI SISTEM MANAJEMEN LAUNDRY (KELOMPOK C)    ")
     print("=" * 65)
 
-
 def tampilkan_menu_utama():
-    """Menampilkan pilihan menu utama sistem laundry."""
     print("\n" + "=" * 50)
     print("                  MENU UTAMA")
     print("=" * 50)
@@ -46,12 +40,9 @@ def tampilkan_menu_utama():
     print("  0. Simpan Seluruh Data & Keluar")
     print("=" * 50)
 
-
 def main():
-    """Fungsi utama pengatur alur sistem manajemen laundry."""
     cetak_banner()
 
-    # Membaca kembali data ketika aplikasi dijalankan (Ketentuan Fitur 5)
     print("[INFO] Membaca data tersimpan dari file...")
     data_sistem = Modul.penyimpanan_riwayat.muat_semua_data()
     print(
@@ -73,29 +64,22 @@ def main():
             continue
 
         if pilihan == "1":
-            # 1. Manajemen Pelanggan
             Modul.pelanggan.menu_pelanggan()
-            # Sinkronisasi data pelanggan terbaru
             data_sistem["pelanggan"] = Modul.penyimpanan_riwayat.muat_data_pelanggan()
 
         elif pilihan == "2":
-            # 2. Manajemen Layanan
             Modul.layanan.main()
-            # Sinkronisasi data layanan terbaru
             data_sistem["layanan"] = Modul.penyimpanan_riwayat.muat_data_layanan()
 
         elif pilihan == "3":
-            # 3. Manajemen Pesanan
             data_sistem["layanan"] = Modul.penyimpanan_riwayat.muat_data_layanan()
             if hasattr(Modul.pesanan, "main"):
                 Modul.pesanan.main()
             elif hasattr(Modul.pesanan, "menu_pesanan"):
                 Modul.pesanan.menu_pesanan(data_sistem["layanan"])
-            # Sinkronisasi data pesanan terbaru
             data_sistem["pesanan"] = Modul.penyimpanan_riwayat.muat_data_pesanan()
 
         elif pilihan == "4":
-            # 4. Transaksi Pembayaran Kasir
             data_sistem["pelanggan"] = Modul.penyimpanan_riwayat.muat_data_pelanggan()
             data_sistem["layanan"] = Modul.penyimpanan_riwayat.muat_data_layanan()
             data_sistem["pesanan"] = Modul.penyimpanan_riwayat.muat_data_pesanan()
@@ -109,7 +93,6 @@ def main():
             )
 
         elif pilihan == "5":
-            # 5. Riwayat dan Penyimpanan Data
             data_sistem["pelanggan"] = Modul.penyimpanan_riwayat.muat_data_pelanggan()
             data_sistem["layanan"] = Modul.penyimpanan_riwayat.muat_data_layanan()
             data_sistem["pesanan"] = Modul.penyimpanan_riwayat.muat_data_pesanan()
@@ -123,7 +106,6 @@ def main():
             )
 
         elif pilihan == "0":
-            # 0. Simpan & Keluar
             print("\n[INFO] Menyimpan seluruh data sistem...")
             Modul.penyimpanan_riwayat.simpan_semua_data(
                 daftar_pelanggan=data_sistem["pelanggan"],
@@ -134,7 +116,6 @@ def main():
             print("[INFO] Seluruh data berhasil disimpan dengan aman.")
             print("Terima kasih telah menggunakan Sistem Manajemen Laundry!\n")
             break
-
 
 if __name__ == "__main__":
     try:

@@ -8,7 +8,6 @@ FOLDER_PROGRAM = os.path.dirname(__file__)
 FILE_LAYANAN = os.path.join(FOLDER_PROGRAM, "layanan.json")
 LEBAR_GARIS = 52
 
-# tuple berisi layanan awal: (nama, harga per kg, estimasi jam)
 LAYANAN_AWAL = (
     ("Cuci Strika", 8000, 48),
     ("Setrika Saja", 5000, 24),
@@ -16,10 +15,10 @@ LAYANAN_AWAL = (
     ("Express", 25000, 6),
 )
 
-# set berisi kunci yang wajib ada di setiap layanan
+
 KUNCI_WAJIB = {"nama", "harga", "estimasi_jam"}
 
-# set berisi jawaban ya / tidak
+
 JAWABAN_YA = {"y", "ya"}
 JAWABAN_TIDAK = {"t", "tidak", "n"}
 
@@ -133,14 +132,14 @@ def format_rupiah(angka):
     return "Rp " + f"{angka:,}".replace(",", ".")
 
 
-# Minta nomor layanan. Mengembalikan indeks list, atau None kalau batal.
+
 def pilih_nomor_layanan(data, pesan):
     nomor = input_angka(pesan + " (0 = batal): ", 0, len(data))
     if nomor == 0:
         return None
     return nomor - 1
 
-# tampilan layar dalam bentuk tabel
+
 def tampilkan_daftar(data):
     print()
     cetak_garis()
@@ -171,7 +170,7 @@ def tambah_layanan(data):
     print("\n--- TAMBAH LAYANAN ---")
     nama = input_teks("Nama layanan (contoh: Cuci Saja)  : ")
 
-    # set berisi nama yang sudah dipakai (huruf kecil semua)
+    
     nama_terpakai = {item["nama"].lower() for item in data}
     if nama.lower() in nama_terpakai:
         print("Layanan dengan nama itu sudah ada.")
@@ -271,7 +270,7 @@ def tampilkan_menu():
 # PROGRAM UTAMA
 
 def main():
-    data = muat_data()  # data dibaca dari file ketika program mulai
+    data = muat_data()  
 
     while True:
         tampilkan_menu()
