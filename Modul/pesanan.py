@@ -5,11 +5,11 @@ import os
 import layanan 
 
 
-FOLDER_PROGRAM = os.path.dirname(os.path.abspath(__file__)) #Menentukan lokasi folder tempat file pesanan.py berada.
-FILE_PESANAN = os.path.join(FOLDER_PROGRAM, "pesanan.json") # Menentukan alamat lengkap file untuk menyimpan data pesanan. os.path.join() digunakan untuk menggabungkan lokasi folder dengan nama file.
-FILE_PELANGGAN = os.path.join(FOLDER_PROGRAM, "data_pelanggan.json") #Menentukan lokasi file yang berisi data pelanggan. Mengapa dibutuhkan? Ketika pelanggan ingin membuat pesanan, program harus memeriksa apakah kode pelanggan yang dimasukkan benar-benar terdaftar.
+FOLDER_PROGRAM = os.path.dirname(os.path.abspath(__file__)) 
+FILE_PESANAN = os.path.join(FOLDER_PROGRAM, "pesanan.json") 
+FILE_PELANGGAN = os.path.join(FOLDER_PROGRAM, "data_pelanggan.json") 
 
-STATUS_PESANAN = ("Diterima", "Diproses", "Selesai", "Diambil") #Menyediakan daftar status yang dapat digunakan dalam pengelolaan pesanan.
+STATUS_PESANAN = ("Diterima", "Diproses", "Selesai", "Diambil") 
 
 
 
@@ -360,7 +360,7 @@ def hapus_pesanan(data):
 
     tampilkan_daftar_pesanan(data)
 
-    kode = input_teks("Masukkan kode pesanan yang dihapus: ").upper() #upper untuk mwngubah kode menjadi huruf kapital
+    kode = input_teks("Masukkan kode pesanan yang dihapus: ").upper() 
     pesanan = cari_pesanan(data, kode)
 
     if pesanan is None:
