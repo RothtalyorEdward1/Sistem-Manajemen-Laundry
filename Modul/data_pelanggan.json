@@ -4,5 +4,11 @@
         "nama": "Rein",
         "telepon": "085135596308",
         "alamat": "kemiri barat"
+    },
+    {
+        "id": "P002",
+        "nama": "Tes",
+        "telepon": "12345678901",
+        "alamat": "tes"
     }
 ]

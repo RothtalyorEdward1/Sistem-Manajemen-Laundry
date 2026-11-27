@@ -194,12 +194,12 @@ def tampilkan_riwayat_pesanan(daftar_pesanan, riwayat_pembayaran=None, daftar_pe
     )
     cetak_garis(85, "-")
 
-    for i, pesanan in enumerate(daftar_pesanan, start=1):
+    for i, pesanan in enumerate(riwayat_pembayaran, start=1):
         kode = _ambil_kode_pesanan(pesanan)
         nama = _ambil_nama_pelanggan(pesanan, daftar_pelanggan)
         layanan = pesanan.get("layanan") or pesanan.get("nama_layanan") or "-"
         berat = f"{pesanan.get('berat_kg', 0)} kg"
-        total = format_rupiah(pesanan.get("total") or pesanan.get("total_biaya", 0))
+        total = format_rupiah(pesanan.get("total") or pesanan.get("total_tagihan", 0))
         status_proses = pesanan.get("status", "Diterima")
         status_bayar = _ambil_status_bayar(pesanan, riwayat_pembayaran)
 

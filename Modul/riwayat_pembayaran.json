@@ -1,1 +1,17 @@
-[]
+[
+    {
+        "id_pembayaran": "PAY001",
+        "no_transaksi": "ORD001",
+        "id_pelanggan": "P001",
+        "nama_pelanggan": "Rein",
+        "nama_layanan": "Cuci setrika",
+        "berat_kg": 3.0,
+        "is_member": false,
+        "biaya_awal": 24000.0,
+        "nominal_diskon": 0.0,
+        "total_tagihan": 24000.0,
+        "nominal_bayar": 50000.0,
+        "kembalian": 26000.0,
+        "waktu_bayar": "2026-11-27 15:40:55"
+    }
+]
