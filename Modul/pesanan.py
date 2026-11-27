@@ -252,21 +252,7 @@ def tambah_pesanan(data):
             print("Layanan :", jenis["nama"])
             print("Berat   :", berat, "kg")
             print("Subtotal:", format_rupiah(subtotal))
-
-            while True:
-                tambah_lagi = input("\nTambah jenis layanan lain? (y/t): ").strip().lower() #.strip() menghapus spasi di awal dan akhir input. .lower() mengubah huruf menjadi huruf kecil.
-
-                if tambah_lagi == "t" or tambah_lagi == "tidak" or tambah_lagi == "n":
-                    break
-                elif tambah_lagi == "y" or tambah_lagi == "ya":
-                    break
-                else:
-                    print("Jawaban tidak valid!")
-
-            if tambah_lagi == "t" or tambah_lagi == "tidak" or tambah_lagi == "n":
-                break
-            elif tambah_lagi == "y" or tambah_lagi == "ya":
-                continue
+            break
 
         else:
             print("Nomor layanan tidak tersedia!")
