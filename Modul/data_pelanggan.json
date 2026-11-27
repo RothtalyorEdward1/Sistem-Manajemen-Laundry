@@ -1,1 +1,32 @@
-[]
+[
+    {
+        "id": "P001",
+        "nama": "Rein",
+        "telepon": "088612443456",
+        "alamat": "Nias"
+    },
+    {
+        "id": "P002",
+        "nama": "Lizh",
+        "telepon": "086215596732",
+        "alamat": "Salatiga"
+    },
+    {
+        "id": "P003",
+        "nama": "Rissa",
+        "telepon": "089925457899",
+        "alamat": "Ungaran"
+    },
+    {
+        "id": "P004",
+        "nama": "Edward",
+        "telepon": "082345513830",
+        "alamat": "Semarang"
+    },
+    {
+        "id": "P005",
+        "nama": "Dayvin",
+        "telepon": "082267328231",
+        "alamat": "Solo"
+    }
+]
