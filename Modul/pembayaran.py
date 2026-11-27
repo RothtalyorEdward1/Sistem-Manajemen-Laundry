@@ -16,8 +16,7 @@ def _hitung_ringkasan_layanan(pesanan_dict):
         total_berat = sum(float(item.get("berat", 0)) for item in daftar)
         biaya_awal = sum(float(item.get("subtotal", 0)) for item in daftar)
         return ringkasan_nama, total_berat, biaya_awal
-
-    # Fallback jika format lama
+    
     return (
         pesanan_dict.get("layanan", "-"),
         float(pesanan_dict.get("berat_kg", 0)),
