@@ -38,7 +38,7 @@ def input_angka(pesan, minimal=0, maksimal=None, boleh_kosong=False):
     while True:
         teks = input(pesan).strip()
 
-        if teks == "" and kosong:
+        if teks == "" and boleh_kosong:
             return None
 
         try:
